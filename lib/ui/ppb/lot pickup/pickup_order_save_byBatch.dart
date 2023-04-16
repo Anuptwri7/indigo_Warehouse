@@ -19,7 +19,8 @@ class PickUpOrderByBatchSaveLocation extends StatefulWidget {
   int? orderId;
   int? purchaseDetail;
   double? qty;
-  PickUpOrderByBatchSaveLocation(this.purchaseDetail, this.orderId, this.qty);
+  bool ? isSerializable;
+  PickUpOrderByBatchSaveLocation(this.purchaseDetail, this.orderId, this.qty,this.isSerializable);
 
   @override
   State<PickUpOrderByBatchSaveLocation> createState() =>
@@ -90,21 +91,23 @@ class _PickUpOrderByBatchSaveLocationState
   @override
   void initState() {
     super.initState();
+    log(widget.qty.toString());
     _newScannedLocationInitDataWedgeListener();
   }
 
   @override
   Widget build(BuildContext context) {
     final pvr = Provider.of<SerialControllerForLot>(context);
+    log("scanned pk"+pvr.scannnedPK.toString());
     WidgetsBinding.instance.addPostFrameCallback((_) {
-     if(widget.qty!.toInt()==0){
-       widget.qty! < pvr.serialId.length? _completedButton(context) : null;
-       widget.qty == pvr.serialId.length? constLocation = _currentScannedLocation:"";
-     }else{
-       widget.qty == pvr.serialId.length? _completedButton(context) : null;
-       widget.qty == pvr.serialId.length? constLocation = _currentScannedLocation:"";
-     }
-      widget.qty == pvr.serialId.length? constLocation = _currentScannedLocation:"";
+      if(widget.isSerializable==true){
+        widget.qty == pvr.serialId.length ? _completedButton(context) : null;
+      }else{
+        pvr.scannnedPK.isNotEmpty?
+        _completedButton(context):null;
+      }
+
+
       // location.contains(_currentScannedLocation)
       //     ? ""
       //     : displayToast(msg: "Please scan location");
@@ -217,7 +220,7 @@ class _PickUpOrderByBatchSaveLocationState
                                       child: Padding(
                                     padding: const EdgeInsets.all(12.0),
                                     child: Text(
-                                      "${(widget.qty! - pvr.serialId.length)}",
+                                      "${(widget.isSerializable==true?widget.qty! - pvr.serialId.length:widget.qty!-pvr.scannnedPK.length!)}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 17),
@@ -329,7 +332,8 @@ class _PickUpOrderByBatchSaveLocationState
                           data[index].id,
                           widget.orderId,
                           index,
-                            data[index].remainingQty
+                            data[index].remainingQty,
+                          widget.isSerializable
                         ),
                       ),
                 child: Padding(
@@ -499,7 +503,7 @@ class _PickUpOrderByBatchSaveLocationState
       "task_lot_detail_id": widget.orderId,
       "task_lot_packing_types": scannedPack
     };
-
+log("SENDING BODY:"+responseBody.toString());
     // log("Scanned Serial code final" + response.body);
     try {
       var response = await http.post(
@@ -560,7 +564,7 @@ class _PickUpOrderByBatchSaveLocationState
     // response = await NetworkHelper(
     //         '$finalUrl${StringConst.baseUrl+StringConst.urlCustomerOrderApp}pack-type?limit=0&purchase_detail=$receivedOrderID&location_code=$search')
     //     .getOrdersWithToken();
-log(response.body);
+log("RESPONSE FOR PACK CODES:"+response.body);
     if (response.statusCode == 401) {
 
     } else {
@@ -577,6 +581,6 @@ log(response.body);
   popAndLoadPage(pkOrderID) {
     Navigator.pop(context);
     Navigator.pop(context);
-    goToPage(context, PickUpOrderByBatchDetails(pkOrderID));
+    goToPage(context, PickUpOrderByBatchDetails(pkOrderID,widget.isSerializable));
   }
 }

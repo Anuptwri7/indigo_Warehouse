@@ -17,7 +17,8 @@ import 'model/additional.dart';
 
 class BeforePickup extends StatefulWidget {
   int? orderID;
-  BeforePickup(this.orderID);
+  bool? isSerializable;
+  BeforePickup(this.orderID,this.isSerializable);
   @override
   State<BeforePickup> createState() => _BeforePickupState();
 }
@@ -107,7 +108,7 @@ class _BeforePickupState extends State<BeforePickup> {
               onTap: ()=>{
                 data[index].picked==true?Fluttertoast.showToast(msg: "Already Picked"):goToPage(
                     context,
-                    PickUpOrderByBatchSaveLocation(data[index].purchaseDetail, data[index].id, data[index].qty))
+                    PickUpOrderByBatchSaveLocation(data[index].purchaseDetail, data[index].id, data[index].qty,data[index].itemIsSerializable))
               },
               child: Card(
                 margin: kMarginPaddSmall,
@@ -212,11 +213,6 @@ class _BeforePickupState extends State<BeforePickup> {
         : const Text('We have no Data for now');
   }
 
-  // void savePackCodeList(List<CustomerPackingType> customerPackingTypes) {
-  //   for (int i = 0; i < customerPackingTypes.length; i++) {
-  //     packLocations.add(customerPackingTypes[i].locationCode ?? "" + "\n");
-  //   }
-  // }
 
   String showPickUpLocations() {
     return packLocations.join(" , ").toString();

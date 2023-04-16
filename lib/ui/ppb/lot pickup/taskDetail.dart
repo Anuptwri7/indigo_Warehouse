@@ -104,7 +104,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               onTap: ()=>{
                 goToPage(
                     context,
-                    BeforePickup(data[index].id))
+                    BeforePickup(data[index].id,data[index].outputItem!.isSerializable))
               },
               child: Card(
                 margin: kMarginPaddSmall,
@@ -179,7 +179,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             ),
                             child: Center(
                                 child: Text(
-                                  "${data[index].lotNo}",
+                                  "${data[index].outputItem!.isSerializable}",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 )),
                           ),
@@ -228,7 +228,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
         goToPage(
             context,
-            BeforePickup(data[index].id))
+            BeforePickup(data[index].id,data[index].output!.isSerializable))
       },
     )
         : ElevatedButton(

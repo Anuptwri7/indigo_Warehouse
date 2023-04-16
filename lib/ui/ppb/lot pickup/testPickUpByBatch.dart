@@ -26,9 +26,10 @@ class TestPickupByBatch extends StatefulWidget {
   int? order;
   int? index;
   double? remQty;
+  bool? isSerialzable;
 
   TestPickupByBatch(this.batchNo, this.qty, this.pkCode, this.locationCode,
-      this.id, this.order, this.index,this.remQty);
+      this.id, this.order, this.index,this.remQty,this.isSerialzable);
 
   @override
   State<TestPickupByBatch> createState() => _TestPickupByBatchState();
@@ -164,57 +165,40 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
             child: ElevatedButton(
               child:Text('Save') ,
               onPressed: () async {
+
                 final pvr =
                     Provider.of<SerialControllerForLot>(context, listen: false);
+
                 List<String> updatedSerialId = pvr.serialId;
                 updatedSerialId += _scanedSerialId;
                 pvr.updateSerialId(newSerialId: updatedSerialId);
-                if(widget.qty!<widget.remQty!){
-                  pvr.serialId.length=widget.qty!.toInt();
-                }else{}
+
                 List<String> updatedSerialcode = pvr.serialCode;
                 updatedSerialcode += _scanedSerialNo;
                 pvr.updateSerialCode(newSerialCode: updatedSerialcode);
 
                 List<dynamic> sale_packing_type_detail_code = [];
                 for (var i = 0; i < _scanedSerialId.length; i++) {
-                  sale_packing_type_detail_code.add({
+                widget.isSerialzable==true?  sale_packing_type_detail_code.add({
                     "id": _scanedSerialId[i],
                     "code": _scanedSerialNo[i],
                     "packing_type_detail_code": _scanedSerialId[i]
-                  });
+                  }):
+             sale_packing_type_detail_code==[];
                 }
-                log(widget.qty!.toInt().toString());
-                if(widget.qty!.toInt().toString()=="0"){
-                  _scanedSerialId.isNotEmpty
-                      ? pvr.updatePackId(
-                      Id: widget.id.toString(),
-                      sale_packing_type_detail_code:
-                      sale_packing_type_detail_code,
-                      qty: widget.remQty
-                  )
-                      : null;
-                  Navigator.pop(context);
-                }else{
-
-                  _scanedSerialId.isNotEmpty
-                      ? pvr.updatePackId(
-                      Id: widget.id.toString(),
-                      sale_packing_type_detail_code:
-                      sale_packing_type_detail_code,
-                      qty: widget.remQty
-                  )
-                      : null;
-                  _scanedSerialId.isNotEmpty
-                      ? pvr.updateIndex(pk: widget.pkCode)
-                      : null;
-                  Navigator.pop(context);
-                }
-
-
-
+                _scanedSerialId.isNotEmpty
+                    ? pvr.updatePackId(
+                  Id: widget.id.toString(),
+                  sale_packing_type_detail_code:
+                  sale_packing_type_detail_code,
+                  qty: widget.isSerialzable==false?widget.qty!.toDouble():_scanedSerialId.length.toDouble(),
+                )
+                    : null;
+                _scanedSerialId.isNotEmpty
+                    ? pvr.updateIndex(pk: widget.pkCode)
+                    : null;
+                Navigator.pop(context);
               },
-
             ),
           ),
         ],
@@ -237,9 +221,7 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
              sortColumnIndex: 0,
              columnSpacing: 190,
              horizontalMargin: 0,
-
              // columnSpacing: 10,
-
              columns: [
                DataColumn(
                  label: SizedBox(

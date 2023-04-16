@@ -43,6 +43,7 @@ class _PickUpOrderByBatchSaveLocationState
   List<String> location = [];
   bool isSerializable = false;
   String errorMessage = '';
+  List pack=[];
 
   Future searchHandling() async {
     // if (_currentScannedLocationList[0] == "") {
@@ -91,6 +92,7 @@ class _PickUpOrderByBatchSaveLocationState
     super.initState();
     log("location "+_currentScannedLocation);
     _newScannedLocationInitDataWedgeListener();
+    _newScannedLocationInitDataWedgeListenerPack();
   }
 
 
@@ -438,15 +440,41 @@ class _PickUpOrderByBatchSaveLocationState
                   jsonResponse["decodedData"].toString().trim();
               if (location.contains(_currentScannedLocation)) {
                 if(_currentScannedLocationList.contains(jsonResponse["decodedData"].toString().trim())){
-
+                  if(_currentScannedLocationList.isNotEmpty){
+                    pack.add(_currentScannedLocation);
+                  }
+                  log("alsdkj"+pack.toString());
                   _currentScannedLocationList.clear();
                   _currentScannedLocationList.add( jsonResponse["decodedData"].toString().trim());
                   log(_currentScannedLocationList.toString());
-
                 }
                 else{
                   _currentScannedLocationList.add( jsonResponse["decodedData"].toString().trim());
                 }
+              } else {
+              }
+              log("Scanned Location No : ${_currentScannedLocation.toString()}");
+            } else {}
+            setState(() {});
+          } catch (e) {}
+        } else {}
+      },
+    );
+  }
+  Future<void> _newScannedLocationInitDataWedgeListenerPack() async {
+    ZebraDataWedge.listenForDataWedgeEvent(
+          (response) {
+        if (response != null && response is String) {
+          Map<String, dynamic>? jsonResponse;
+          try {
+            jsonResponse = json.decode(response);
+            if (jsonResponse != null) {
+
+              _currentScannedLocation =
+                  jsonResponse["decodedData"].toString().trim();
+              if (_currentScannedLocation.startsWith("PK")) {
+             pack.add(_currentScannedLocation);
+             log(pack.toString());
 
               } else {
 
@@ -564,7 +592,7 @@ class _PickUpOrderByBatchSaveLocationState
         StringConst.pickUpOrderID, widget.purchaseDetail.toString());
     String finalUrl = prefs.getString("subDomain").toString();
     final response = await http.get(
-        Uri.parse('https://$finalUrl${StringConst.urlCustomerOrderApp}pack-type?limit=0&purchase_detail=$receivedOrderID&location_code=$search'),
+        Uri.parse('https://$finalUrl${StringConst.urlCustomerOrderApp}pack-type?limit=0&purchase_detail=$receivedOrderID&location_code=$search&code=${pack.isNotEmpty?pack[0]:''}'),
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
@@ -573,7 +601,8 @@ class _PickUpOrderByBatchSaveLocationState
     // response = await NetworkHelper(
     //         '$finalUrl${StringConst.baseUrl+StringConst.urlCustomerOrderApp}pack-type?limit=0&purchase_detail=$receivedOrderID&location_code=$search')
     //     .getOrdersWithToken();
-
+log("Packs list"+response.body);
+log('https://$finalUrl${StringConst.urlCustomerOrderApp}pack-type?limit=0&purchase_detail=$receivedOrderID&location_code=$search&code=${pack.isNotEmpty?pack[0]:''}');
     if (response.statusCode == 401) {
       replacePage(LoginScreen(), context);
     } else {
