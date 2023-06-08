@@ -194,7 +194,7 @@ class CustomerPackingType {
   });
 
   int id;
-  LocationCode locationCode;
+  LocationCode? locationCode;
   int location;
   String code;
   double qty;
@@ -204,7 +204,7 @@ class CustomerPackingType {
 
   factory CustomerPackingType.fromJson(Map<String, dynamic> json) => CustomerPackingType(
     id: json["id"],
-    locationCode: locationCodeValues.map[json["location_code"]]!,
+    locationCode: locationCodeValues.map[json["location_code"]],
     location: json["location"],
     code: json["code"],
     qty: double.parse(json["qty"]),

@@ -49,55 +49,78 @@ class _LocationShiftingState extends State<LocationShifting> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Location Shifting"),
-        backgroundColor: Color(0xff2c51a4),
+        title: const Text("Location Shifting",
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        // backgroundColor: Color(0xff2c51a4),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Packet Code',
-              style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Packet Code',
+                style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Card(
-            color: Color(0xffeff3ff),
-            elevation: 8.0,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Text("${_packCodesList.isEmpty?"Please scan Pack code":_packCodesList}"),
-          ),
-          kHeightMedium,
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                Text(
-                  'Location',
-                  style:
-                  kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
-                ),
+            Container(
+              margin: EdgeInsets.all(4.0),
+              padding: EdgeInsets.all(4.0),
+              decoration: kFormBoxDecoration,
+              width: MediaQuery.of(context).size.width,
+              child:  Text(
+                  "${_packCodesList.isEmpty?"Please scan Pack code":_packCodesList}"),
+            ),
+            // Card(
+            //   color: Color(0xffeff3ff),
+            //   elevation: 8.0,
+            //   clipBehavior: Clip.antiAlias,
+            //   shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(12.0)),
+            //   child: Text("${_packCodesList.isEmpty?"Please scan Pack code":_packCodesList}"),
+            // ),
+            kHeightMedium,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:
+              Text(
+                'Location',
+                style:
+                kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
+              ),
 
-          ),
-          Card(
-            color: Color(0xffeff3ff),
-            elevation: 8.0,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Text("${locationNumber.isEmpty?"Please scan the location":locationNumber}"),
-          ),
-          kHeightMedium,
+            ),
+            Container(
+              margin: EdgeInsets.all(4.0),
+              padding: EdgeInsets.all(4.0),
+              decoration: kFormBoxDecoration,
+              width: MediaQuery.of(context).size.width,
+              child:  Text(
+                  "${locationNumber.isEmpty?"Please scan the location":locationNumber}"),
+            ),
+            // Card(
+            //   color: Color(0xffeff3ff),
+            //   elevation: 8.0,
+            //   clipBehavior: Clip.antiAlias,
+            //   shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(12.0)),
+            //   child: Text("${locationNumber.isEmpty?"Please scan the location":locationNumber}"),
+            // ),
+            kHeightMedium,
 
-          ElevatedButton(
-              onPressed: (){
-                LocationShiftingService();
-              },
-              child: Text("Update"))
+            ElevatedButton(
+                onPressed: (){
+                  LocationShiftingService();
+                },
+                child: Text("Update"))
 
 
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -244,7 +267,7 @@ class _LocationShiftingState extends State<LocationShifting> {
     await SharedPreferences.getInstance();
     String finalUrl = sharedPreferences.getString("subDomain").toString();
     final response = await http.get(
-      Uri.parse("https://${finalUrl}/api/v1/item-serialization-app/pack-code-location/${pk.toString()}" ),
+        Uri.parse("https://${finalUrl}/api/v1/item-serialization-app/pack-code-location/${pk.toString()}" ),
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
@@ -257,7 +280,7 @@ class _LocationShiftingState extends State<LocationShifting> {
       sharedPreferences.setString("id",json.decode(response.body)['id'].toString());
 
 
-      log("got it ::::::::::::::"+response.body);
+      // log("got it ::::::::::::::"+response.body);
 
 
     } else{
@@ -269,27 +292,27 @@ class _LocationShiftingState extends State<LocationShifting> {
   Future LocationShiftingService() async {
     final SharedPreferences sharedPreferences =
     await SharedPreferences.getInstance();
-    log(StringConst.baseUrl + StringConst.locationShiftingApi);
     String finalUrl = sharedPreferences.getString("subDomain").toString();
+    log(StringConst.baseUrl + StringConst.locationShiftingApi);
     final response = await http.post(
-        Uri.parse('https://$finalUrl${StringConst.locationShiftingApi}'),
+        Uri.parse('https://${finalUrl}${StringConst.locationShiftingApi}'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer ${sharedPreferences.get("access_token")}'
         },
         body: json.encode(
-          {
-            "pack_type_code_id":int.parse(sharedPreferences.getString("id").toString()),
-            "location_code": locationNumber[0].toString()
-          }
+            {
+              "pack_type_code_id":int.parse(sharedPreferences.getString("id").toString()),
+              "location_code": locationNumber[0].toString()
+            }
         ));
-    log("sdsd${int.parse(sharedPreferences.getString("id").toString())}");
+    log("${int.parse(sharedPreferences.getString("id").toString())}");
     log("${locationNumber[0].toString()}");
-    log(response.body);
+    // log(response.body);
     if (response.statusCode == 201) {
       locationNumber.clear();
-        Navigator.pop(context);
+      Navigator.pop(context);
       Fluttertoast.showToast(msg: " successfully!");
     }else{
       Fluttertoast.showToast(msg: response.body.toString());
@@ -339,3 +362,4 @@ class _LocationShiftingState extends State<LocationShifting> {
 
 
 }
+

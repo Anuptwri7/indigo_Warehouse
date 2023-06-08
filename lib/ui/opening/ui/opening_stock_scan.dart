@@ -17,12 +17,13 @@ import 'opening_list.dart';
 import 'opening_stock_details.dart';
 import 'package:http/http.dart' as http;
 class OpeningStockScan extends StatefulWidget {
-
+  String orderNo;
+  String Fname;
   String purchaseDetail='';
 
   List locationSavedCodes = [];
   List<PuPackTypeCodes> openStockResult = [];
-  OpeningStockScan(this.purchaseDetail,this.openStockResult, this.locationSavedCodes);
+  OpeningStockScan(this.orderNo,this.Fname,this.purchaseDetail,this.openStockResult, this.locationSavedCodes);
 
 
   @override
@@ -58,8 +59,10 @@ List gotPackCodes=[];
     return WillPopScope(
       onWillPop: () => popAndLoadPage(_openStockOrderID),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Scan Item Location'),
-        backgroundColor: Color(0xff2c51a4),
+        appBar: AppBar(title:  Text('Scan Item Location',  style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        elevation: 0,
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -80,18 +83,7 @@ List gotPackCodes=[];
                           Container(
                             height: 30,
                             width: 100,
-                            decoration:  BoxDecoration(
-                              color: const Color(0xffeff3ff),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xffeff3ff),
-                                  offset: Offset(-2, -2),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
+
 
                             child: Center(child: Text("${totalReceivedQty}",
                               overflow: TextOverflow.clip,
@@ -124,18 +116,7 @@ List gotPackCodes=[];
                               Container(
                                 height: 30,
                                 width: 80,
-                                decoration:  BoxDecoration(
-                                  color: const Color(0xffeff3ff),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color(0xffeff3ff),
-                                      offset: Offset(-2, -2),
-                                      spreadRadius: 1,
-                                      blurRadius: 10,
-                                    ),
-                                  ],
-                                ),
+
 
                                 child: Center(child: Text("${_scannedPackCode.length}",
                                   overflow: TextOverflow.clip,
@@ -170,7 +151,7 @@ List gotPackCodes=[];
                 child: Text('Pack Codes', style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),),
               ),
               Card(
-                color: Color(0xffeff3ff),
+                color: Colors.white,
                 elevation: 8.0,
                 clipBehavior: Clip.antiAlias,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -193,8 +174,8 @@ List gotPackCodes=[];
                       // dropCurrentItem(_scanLocationNo, _scanPackNo)
                   _scanLocationNo.isNotEmpty && _scannedPackCode.length==packCodes.length
                       ? dropCurrentItem()
-                      : displayToast(msg:  'Please Scan Codes and Try Again'),
-                  color: Color(0xff2c51a4),
+                      : displayToast(msg: 'Please Scan Codes and Try Again'),
+                  color: Colors.brown.shade800,
                 ),
               ),
             ],
@@ -316,7 +297,7 @@ log(response.body);
   popAndLoadPage(dropOrderID) {
     Navigator.pop(context);
     Navigator.pop(context);
-    goToPage(context, OpeningStockDetails(dropOrderID));
+    goToPage(context, OpeningStockDetails(widget.orderNo,widget.Fname,dropOrderID));
   }
 
   Future<void> initUi() async {
@@ -348,7 +329,7 @@ log(response.body);
 
   _displayLocationSerialNo() {
     return Card(
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
       child: Padding(
@@ -375,15 +356,15 @@ log(response.body);
                   ),
                 ),
                 Expanded(
-                  flex:1 ,
-                  child: RoundedButtonThree(
+                  flex:0,
+                  child: RoundedSmallButtonsFive(
                     onTap: (){
                       _scanLocationNo = "";
                       setState(() {
 
                       });
-                    }, buttonText: "X",
-                    color: Color(0xff2c51a4),),
+                    }, icon:Icons.delete,
+                    color: Colors.white,),
                 ),
               ],
             ),
@@ -397,7 +378,7 @@ log(response.body);
   _displayItemsSerialNo() {
     return Card(
 
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
       child: Padding(

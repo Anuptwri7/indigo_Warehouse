@@ -76,8 +76,14 @@ class _RemoveRepackagedPackState extends State<RemoveRepackagedPack> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Remove Re-Packaged Codes'),
-        backgroundColor: Color(0xff2c51a4),
+      appBar: AppBar(title: const Text('Remove Re-Packaged Codes',
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 15,
+              fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -95,18 +101,7 @@ class _RemoveRepackagedPackState extends State<RemoveRepackagedPack> {
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${newRePackCodes.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -121,18 +116,7 @@ class _RemoveRepackagedPackState extends State<RemoveRepackagedPack> {
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${_scanPackCode.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -183,7 +167,6 @@ class _RemoveRepackagedPackState extends State<RemoveRepackagedPack> {
               ],
             ),
             kHeightMedium,
-
             Container(
               width: 120,
               padding:  const EdgeInsets.all(16.0),
@@ -193,7 +176,7 @@ class _RemoveRepackagedPackState extends State<RemoveRepackagedPack> {
                 _scanPackCode.isNotEmpty
                     ? dropCurrentItem(_scanLocationNo, _scanPackNo)
                     : displayToast(msg:  'Please Scan Codes and Try Again'),
-                color: Color(0xff2c51a4),
+                color: Colors.brown.shade800,
               ),
             ),
           ],

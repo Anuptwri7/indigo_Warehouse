@@ -81,10 +81,9 @@ Future<List<Results>?> listDropReceivedOrders(String code) async {
           'Accept': 'application/json',
           'Authorization': 'Bearer ${prefs.get("access_token")}'
         });
-    // http.Response response = await NetworkHelper(
-    //     '$finalUrl${StringConst.urlPurchaseApp}get-orders/received?ordering=-id&limit=0')
-    //     .getOrdersWithToken();
 
+log("Response from server"+response.body);
+log('https://$finalUrl${StringConst.getPackCodesFromRP}?code=$code');
     if (response.statusCode == 401) {
       // replacePage(LoginScreen(), context);
     } else {
@@ -112,8 +111,13 @@ Future<List<Results>?> listDropReceivedOrders(String code) async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Receive Department'),
-        backgroundColor: Color(0xff2c51a4),
+      appBar: AppBar(title: const Text('Receive Department', style: TextStyle(
+          color: Colors.black,
+          fontSize: 15,
+          fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -122,6 +126,7 @@ Future<List<Results>?> listDropReceivedOrders(String code) async {
             _scanPackNo.isNotEmpty?FutureBuilder(
               future: listDropReceivedOrders (_scanPackNo[0].toString()),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
+                log(snapshot.data.toString());
                 if (snapshot.hasData) {
                   try {
                     return  Text("");
@@ -146,18 +151,7 @@ Future<List<Results>?> listDropReceivedOrders(String code) async {
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${packSavedCodes.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -172,18 +166,7 @@ Future<List<Results>?> listDropReceivedOrders(String code) async {
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${packSavedCodes.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -198,7 +181,7 @@ Future<List<Results>?> listDropReceivedOrders(String code) async {
               child: Text('Pack Codes', style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),),
             ),
             Card(
-              color: Color(0xffeff3ff),
+              color: Colors.white,
               elevation: 8.0,
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -224,7 +207,7 @@ Future<List<Results>?> listDropReceivedOrders(String code) async {
                 packSavedCodes.isNotEmpty
                     ? dropCurrentItem(_scanLocationNo, _scanPackNo)
                     : displayToast(msg:  'Please Scan Codes and Try Again'),
-                color: Color(0xff2c51a4),
+                color: Colors.brown.shade800,
               ),
             ),
           ],
@@ -249,7 +232,7 @@ Future<List<Results>?> listDropReceivedOrders(String code) async {
       "device_type": 1,
       "app_type": 1,
       "code": packSavedCodes[i],
-      "qty": packSavedCodes.length,
+      "qty": widget.qty,
       "location": widget.location
     });
     }
@@ -451,96 +434,6 @@ log('${  {
 
   }
 
-  _displayLocationSerialNo() {
-    return Card(
-      color: Color(0xffeff3ff),
-      elevation: kCardElevation,
-      shape: kCardRoundedShape,
-      child: Padding(
-        padding: kMarginPaddSmall,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Location No :',
-                    style: kTextStyleSmall.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    _scanLocationNo,
-                    style: kTextStyleSmall.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-            kHeightSmall,
-          ],
-        ),
-      ),
-    );
-  }
-
-  _displayItemsSerialNo() {
-    return Card(
-      color: Color(0xffeff3ff),
-      elevation: kCardElevation,
-      shape: kCardRoundedShape,
-      child: Padding(
-        padding: kMarginPaddSmall,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-
-                Expanded(
-                  flex: 4,
-                  child: DataTable(
-                    columnSpacing: 15,
-                    horizontalMargin: 0,
-                    // columnSpacing: 10,
-                    columns: const [
-                      DataColumn(
-                        label: SizedBox(
-                          // width: 50,
-                          child: Text('Pack Code'),
-                        ),
-                      ),
-
-
-
-                    ],
-                    rows: List.generate(
-                      _scanPackNo.length,
-                          (index) => DataRow(
-                        // selected: true,
-                        cells: [
-                          DataCell(
-                            Text(_scanPackNo[index].toString()),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-
-                ),
-              ],
-            ),
-            kHeightSmall,
-          ],
-        ),
-      ),
-    );
-  }
 
   printPackCodes() {
     return Padding(
@@ -551,15 +444,7 @@ log('${  {
   }
 
 
-// void savePackCodeList(List<PoPackTypeCode> poPackTypeCodes) {
-//
-//   for(int i = 0 ; i < poPackTypeCodes.length; i++){
-//     packSavedCodes.add(poPackTypeCodes[i].code);
-//   }
-//   setState(() {
-//   });
-//
-// }
+
 
 }
 

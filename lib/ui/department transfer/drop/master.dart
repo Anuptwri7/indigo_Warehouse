@@ -36,18 +36,19 @@ class _DropDepartmentTransferUIState extends State<DropDepartmentTransferUI> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(StringConst.dropDepartmentTransfer),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text(StringConst.dropDepartmentTransfer,
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: ListView(
         shrinkWrap: true,
         children: [
-
           FutureBuilder<List<Results>?>(
               future: dropOrderReceived,
               builder: (context, snapshot) {
@@ -84,8 +85,78 @@ class _DropDepartmentTransferUIState extends State<DropDepartmentTransferUI> {
               padding: kMarginPaddSmall,
               child: Column(
                 children: [
+                  Row(
+                    children: [
+                      Icon(Icons.battery_charging_full_outlined),
+                      Text("${data[index].purchaseNo}"),
+                      SizedBox(width: 60,),
+                      Text("Rs.${data[index].grandTotal}")
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.brown.shade800,
+                        child:  Text('${data[index].createdByUsername!.substring(0,1).toUpperCase() }'),
+                      ),
+                      SizedBox(width: 10,),
+                      Column(
+                        children: [
+                          Container(
 
-                  // poInRowDesign('Received No :', data[index].orderNo),
+                            child: Text(
+                              "${data[index].createdByUsername!.toUpperCase() }",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+
+                                child: Text(
+                                  "${data[index].fromDepartment!.name }",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(width: 10,),
+                              Container(
+
+                                child: Text(
+                                  "To",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(width: 10,),
+                              Container(
+
+                                child: Text(
+                                  "${data[index].toDepartment!.name }",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              // SizedBox(
+                              //   width: 10,
+                              // ),
+
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+
+                    ],
+                  ),
+
+
+
+                  kHeightSmall,
+
+                  // poInRowDesign('Received No :', data[index].purchaseNo),
 
 
                   // poInRowDesign(
@@ -95,50 +166,50 @@ class _DropDepartmentTransferUIState extends State<DropDepartmentTransferUI> {
                   //         .toLocal()
                   //         .toString()
                   //         .substring(0, 10)),
-                  Row(
-                    children: [
-                      Container(
-                        child: Center(child: Text("Supplier Name :",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                      SizedBox(width: 15,),
-                      Container(
-                        height: 30,
-                        width: 200,
-                        decoration:  BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(child: Text("${data[index].purchaseNo}",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 15,),
-                  Row(
-                    children: [
-                      Container(
-                        child: Center(child: Text("From :",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                      SizedBox(width: 15,),
-                      Container(
-                        height: 30,
-                        // width: 200,
-
-                        child: Center(child: Text("${data[index].fromDepartment!.name}",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                      SizedBox(width: 15,),
-                      Container(
-                        child: Center(child: Text("To :",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                      SizedBox(width: 15,),
-                      Container(
-                        height: 30,
-                        // width: 200,
-
-                        child: Center(child: Text("${data[index].toDepartment!.name}",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                    ],
-                  ),
-                  kHeightSmall,
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       child: Center(child: Text("Supplier Name :",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //     SizedBox(width: 15,),
+                  //     Container(
+                  //       height: 30,
+                  //       width: 200,
+                  //       decoration:  BoxDecoration(
+                  //         color: const Color(0xffeff3ff),
+                  //         borderRadius: BorderRadius.circular(10),
+                  //       ),
+                  //       child: Center(child: Text("${data[index].purchaseNo}",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 15,),
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       child: Center(child: Text("From :",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //     SizedBox(width: 15,),
+                  //     Container(
+                  //       height: 30,
+                  //       // width: 200,
+                  //
+                  //       child: Center(child: Text("${data[index].fromDepartment!.name}",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //     SizedBox(width: 15,),
+                  //     Container(
+                  //       child: Center(child: Text("To :",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //     SizedBox(width: 15,),
+                  //     Container(
+                  //       height: 30,
+                  //       // width: 200,
+                  //
+                  //       child: Center(child: Text("${data[index].toDepartment!.name}",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //   ],
+                  // ),
+                  // kHeightSmall,
                   // poInRowDesign('Supplier Name :',
                   //     data[index].supplierName),
                   // kHeightMedium,
@@ -210,17 +281,17 @@ class _DropDepartmentTransferUIState extends State<DropDepartmentTransferUI> {
         ?
     RoundedButtons(
       buttonText: 'Task Completed',
-      onTap: () =>
-          goToPage(context, DropDetail(id:_data[_index].id.toString()))
+      onTap: () =>{}
+          // goToPage(context, DropDetail(id:_data[_index].id.toString(),purchaseNo: _data[_index].purchaseNo,name: _data[_index].createdByUsername,))
       ,
       color: Colors.grey,
     )
         :  RoundedButtons(
       buttonText: 'View Details',
       onTap: () =>
-          goToPage(context, DropDetail(id:_data[_index].id.toString()))
+          goToPage(context, DropDetail(id:_data[_index].id.toString(),purchaseNo: _data[_index].purchaseNo,name: _data[_index].createdByUsername))
       ,
-      color: Color(0xff2c51a4),
+      color: Colors.brown.shade800,
     )
     ;
   }

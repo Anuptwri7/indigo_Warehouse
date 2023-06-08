@@ -84,8 +84,11 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan Item Location'),
-        backgroundColor: Color(0xff2c51a4),
+        title: const Text('Scan Item Location',
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: ListView(
         children: [
@@ -97,7 +100,7 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
             ),
           ),
           Card(
-            color: Color(0xffeff3ff),
+            color: Colors.white,
             elevation: 8.0,
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
@@ -111,24 +114,32 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Serial Codes ',
-                  style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
-                ),
-                Text(
                   'Pack Codes',
                   style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
                 ),
+                Text(
+                  '',
+                  style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
+                ),
+
               ],
             ),
           ),
           Card(
-              color: Color(0xffeff3ff),
+              color: Colors.white,
               elevation: 8.0,
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0)),
               child: Row(
                 children: [
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      widget.pkCode,
+                      style: kTextBlackSmall,
+                    ),
+                  ),
                   Expanded(
                     flex: 2,
                     child: FutureBuilder(
@@ -142,18 +153,12 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
                               if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
-                                return Text("dj");
+                                return Text("");
                               }
                           }
                         }),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      widget.pkCode,
-                      style: kTextBlackSmall,
-                    ),
-                  ),
+
                 ],
               )),
           kHeightMedium,
@@ -204,7 +209,7 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
                 Navigator.pop(context);
 
               },
-              color: Color(0xff2c51a4),
+              color: Colors.brown.shade800,
             ),
           ),
         ],
@@ -216,7 +221,7 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
 
   _displayItemsSerialNo() {
     return Card(
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
       child: Padding(

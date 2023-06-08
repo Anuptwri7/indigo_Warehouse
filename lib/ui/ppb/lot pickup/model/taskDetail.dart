@@ -51,6 +51,7 @@ class Results {
   int ?createdBy;
   int? taskMain;
 
+
   Results(
       {this.id,
         this.createdByUserName,
@@ -70,7 +71,8 @@ class Results {
         this.picked,
         this.isCancelled,
         this.createdBy,
-        this.taskMain});
+        this.taskMain,
+     });
 
   Results.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -94,6 +96,7 @@ class Results {
     isCancelled = json['is_cancelled'];
     createdBy = json['created_by'];
     taskMain = json['task_main'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -119,6 +122,7 @@ class Results {
     data['is_cancelled'] = this.isCancelled;
     data['created_by'] = this.createdBy;
     data['task_main'] = this.taskMain;
+
     return data;
   }
 }

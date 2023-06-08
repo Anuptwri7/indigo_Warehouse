@@ -97,8 +97,13 @@ class _TransferRePackListUiState extends State<TransferRePackListUi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Transfer Master"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Transfer Master", style: TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+            fontWeight: FontWeight.bold)),
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -255,18 +260,7 @@ class _TransferRePackListUiState extends State<TransferRePackListUi> {
                       Container(
                         height: 30,
                         width: 200,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
+
                         child: Center(
                             child: Text(
                               "${data[index].transferNo}",
@@ -297,8 +291,8 @@ class _TransferRePackListUiState extends State<TransferRePackListUi> {
                           style: ButtonStyle(
                             shadowColor: MaterialStateProperty.all<Color>(
                                 Colors.grey),
-                            backgroundColor: data[index].isReceived==true?   MaterialStateProperty.all<Color>(  Color.fromARGB(0, 0, 0, 0)):
-                            MaterialStateProperty.all<Color>(  Color.fromARGB(255, 68, 110, 201)),
+                            backgroundColor: data[index].isReceived==true?   MaterialStateProperty.all<Color>(  Colors.grey):
+                            MaterialStateProperty.all<Color>(  Colors.brown.shade800),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(

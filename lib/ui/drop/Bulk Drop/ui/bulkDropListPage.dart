@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -22,27 +23,50 @@ class BulkPODrop extends StatefulWidget {
   _BulkPODropState createState() => _BulkPODropState();
 }
 
-class _BulkPODropState extends State<BulkPODrop> {
-
+class _BulkPODropState extends State<BulkPODrop> with TickerProviderStateMixin{
+  late TabController? _controller;
   late http.Response response;
   late ProgressDialog pd;
   late Future<List<Result>?> dropOrderReceived;
-
+  int _selectedIndex = 0;
 
   @override
   void initState() {
     dropOrderReceived = listDropReceivedOrders();
     pd = initProgressDialog(context);
     super.initState();
+    _controller = TabController(length: 2, vsync: this);
+    _controller!.addListener(() {
+      setState(() {
+        _selectedIndex = _controller!.index;
+      });
+      log("Selected Index: " + _controller!.index.toString());
+    });
   }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(StringConst.bulkdropOrders),
-        backgroundColor: Color(0xff2c51a4),
+      appBar:AppBar(
+        title: Text(StringConst.bulkdropOrders,
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),
+        ),
+
+        bottom: TabBar(
+          controller: _controller,
+          indicatorColor:Color(0xffBF1E2E),
+          indicatorWeight: 2,
+          unselectedLabelColor: Colors.grey,
+          labelColor:Color(0xffBF1E2E),
+          tabs: [
+            Tab(text: "Pending",),
+            Tab(text: "Completed",),
+          ],
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: ListView(
         shrinkWrap: true,
@@ -86,57 +110,87 @@ class _BulkPODropState extends State<BulkPODrop> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        child: Text("Received No :",style: TextStyle(fontWeight: FontWeight.bold),),
-                      ),
-                      SizedBox(width: 30,),
-                      Container(
-                        height: 30,
-                        width: 200,
-                        decoration:  BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Center(child: Text("${data[index].orderNo}",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
+                      Icon(Icons.battery_charging_full_outlined),
+                      Text("${data[index].orderNo}"),
+                      SizedBox(width: 60,),
+                      Text("Rs.${data[index].grandTotal}")
                     ],
                   ),
-                  kHeightSmall,
-                  // poInRowDesign('Received No :', data[index].orderNo),
+                  SizedBox(height: 10,),
                   Row(
                     children: [
-                      Container(
-                        child: Text("Date :",style: TextStyle(fontWeight: FontWeight.bold),),
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.brown.shade800,
+                        child:  Text('${data[index].supplierName.substring(0,1).toUpperCase() }'),
                       ),
-                      SizedBox(width: 75,),
+                      SizedBox(width: 10,),
                       Container(
-                        height: 30,
                         width: 200,
-                        decoration:  BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
+                        child: Text(
+                          "${data[index].supplierName}",
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        child: Center(child: Text("${data[index].createdDateAd.toString().substring(0,10)}",style: TextStyle(fontWeight: FontWeight.bold),)),
                       ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+
                     ],
                   ),
-                  kHeightSmall,
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       child: Text("Received No :",style: TextStyle(fontWeight: FontWeight.bold),),
+                  //     ),
+                  //     SizedBox(width: 30,),
+                  //     Container(
+                  //       height: 30,
+                  //       width: 200,
+                  //       decoration:  BoxDecoration(
+                  //         color: const Color(0xffeff3ff),
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         boxShadow: const [
+                  //           BoxShadow(
+                  //             color: Color(0xffeff3ff),
+                  //             offset: Offset(-2, -2),
+                  //             spreadRadius: 1,
+                  //             blurRadius: 10,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       child: Center(child: Text("${data[index].orderNo}",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //   ],
+                  // ),
+                  // kHeightSmall,
+                  // // poInRowDesign('Received No :', data[index].orderNo),
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       child: Text("Date :",style: TextStyle(fontWeight: FontWeight.bold),),
+                  //     ),
+                  //     SizedBox(width: 75,),
+                  //     Container(
+                  //       height: 30,
+                  //       width: 200,
+                  //       decoration:  BoxDecoration(
+                  //         color: const Color(0xffeff3ff),
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         boxShadow: const [
+                  //           BoxShadow(
+                  //             color: Color(0xffeff3ff),
+                  //             offset: Offset(-2, -2),
+                  //             spreadRadius: 1,
+                  //             blurRadius: 10,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       child: Center(child: Text("${data[index].createdDateAd.toString().substring(0,10)}",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //   ],
+                  // ),
+                  // kHeightSmall,
                   // poInRowDesign(
                   //     'Date :',
                   //     data[index]
@@ -144,31 +198,31 @@ class _BulkPODropState extends State<BulkPODrop> {
                   //         .toLocal()
                   //         .toString()
                   //         .substring(0, 10)),
-                  Row(
-                    children: [
-                      Container(
-                        child: Center(child: Text("Supplier Name :",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                      SizedBox(width: 15,),
-                      Container(
-                        height: 30,
-                        width: 200,
-                        decoration:  BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Center(child: Text("${data[index].supplierName}",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       child: Center(child: Text("Supplier Name :",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //     SizedBox(width: 15,),
+                  //     Container(
+                  //       height: 30,
+                  //       width: 200,
+                  //       decoration:  BoxDecoration(
+                  //         color: const Color(0xffeff3ff),
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         boxShadow: const [
+                  //           BoxShadow(
+                  //             color: Color(0xffeff3ff),
+                  //             offset: Offset(-2, -2),
+                  //             spreadRadius: 1,
+                  //             blurRadius: 10,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       child: Center(child: Text("${data[index].supplierName}",style: TextStyle(fontWeight: FontWeight.bold),)),
+                  //     ),
+                  //   ],
+                  // ),
                   kHeightSmall,
                   // poInRowDesign('Supplier Name :',
                   //     data[index].supplierName),
@@ -234,13 +288,13 @@ class _BulkPODropState extends State<BulkPODrop> {
     return taskCheck
         ? RoundedButtons(
       buttonText: 'Task Completed',
-      onTap: () => goToPage(context, BulkDropOrderDetails(_data[_index].id)),
-      color: Color(0xff6b88e8),
+      onTap: () => goToPage(context, BulkDropOrderDetails(_data[_index].id,_data[_index].orderNo,_data[_index].supplierName)),
+      color: Colors.grey,
     )
         :  RoundedButtons(
       buttonText: 'View Details',
-      onTap: () => goToPage(context, BulkDropOrderDetails(_data[_index].id)),
-      color: Color(0xff2c51a4),
+      onTap: () => goToPage(context, BulkDropOrderDetails(_data[_index].id,_data[_index].orderNo,_data[_index].supplierName)),
+      color: Color(0xff424143),
     )
     ;
   }

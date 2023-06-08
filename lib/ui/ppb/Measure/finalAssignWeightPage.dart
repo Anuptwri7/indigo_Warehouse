@@ -81,8 +81,13 @@ class _FinalMeasurePostPageState extends State<FinalMeasurePostPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: appBarColor,
-        title: Text("Link weight"),
+
+        title: Text("Link weight",
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        // backgroundColor: Color(0xff2c51a4),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
 
       body: SingleChildScrollView(
@@ -199,7 +204,7 @@ class _FinalMeasurePostPageState extends State<FinalMeasurePostPage> {
                           UpdateLocation();
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Color(0xff789cc8),
+                            primary: Colors.brown.shade800,
                             minimumSize: const Size.fromHeight(30),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)

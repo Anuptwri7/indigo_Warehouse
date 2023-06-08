@@ -17,21 +17,24 @@ import 'package:indigo_paints/ui/drop/ui/drop_order_details.dart';
 import 'package:indigo_paints/ui/login/login_screen.dart';
 import 'package:zebra_datawedge/zebra_datawedge.dart';
 import '../../model/drop_details_model.dart';
+import 'bulkOrderDetailPage.dart';
 
-String _scanLocationNo = '';
+
 class BulkDOScanLocation extends StatefulWidget {
 
   List locationSavedCodes = [];
+  String orderNo;
+  String Fname;
   List<PoPackTypeCode> poPackTypeCode = [];
 
-  BulkDOScanLocation(this.poPackTypeCode, this.locationSavedCodes);
+  BulkDOScanLocation(this.poPackTypeCode,this.orderNo,this.Fname, this.locationSavedCodes);
 
   @override
   State<BulkDOScanLocation> createState() => _BulkDOScanLocationState();
 }
 
 class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
-
+  String _scanLocationNo = '';
   List _scanPackNo = [];
   String _currentScannedCode = '';
 
@@ -57,8 +60,12 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
     return WillPopScope(
       onWillPop: () => popAndLoadPage(_dropOrderID),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Bulk Scan Item Location'),
-          backgroundColor: Color(0xff2c51a4),
+        appBar: AppBar(
+          title: Text('Bulk Scan Item Location',
+            style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -72,21 +79,21 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
                       Container(
                         child: Text("Total:",style: TextStyle(fontWeight: FontWeight.bold),),
                       ),
-                      SizedBox(width: 30,),
+                      SizedBox(width: 10,),
                       Container(
                         height: 30,
                         width: 60,
                         decoration:  BoxDecoration(
-                          color: const Color(0xffeff3ff),
+                          // color: const Color(0xffeff3ff),
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
+                          // boxShadow: const [
+                          //   BoxShadow(
+                          //     color: Color(0xffeff3ff),
+                          //     offset: Offset(-2, -2),
+                          //     spreadRadius: 1,
+                          //     blurRadius: 10,
+                          //   ),
+                          // ],
                         ),
                         child: Center(child: Text("${totalReceivedQty}",style: TextStyle(fontWeight: FontWeight.bold),)),
                       ),
@@ -98,21 +105,21 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
                       Container(
                         child: Text("Scanned:",style: TextStyle(fontWeight: FontWeight.bold),),
                       ),
-                      SizedBox(width: 30,),
+                      SizedBox(width: 10,),
                       Container(
                         height: 30,
                         width: 60,
                         decoration:  BoxDecoration(
-                          color: const Color(0xffeff3ff),
+                          // color: const Color(0xffeff3ff),
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
+                          // boxShadow: const [
+                          //   BoxShadow(
+                          //     color: Color(0xffeff3ff),
+                          //     offset: Offset(-2, -2),
+                          //     spreadRadius: 1,
+                          //     blurRadius: 10,
+                          //   ),
+                          // ],
                         ),
                         child: Center(child: Text("${_scanPackNo.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                       ),
@@ -128,7 +135,7 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
                 child: Text('Pack Codes', style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),),
               ),
               Card(
-                color: Color(0xffeff3ff),
+                color: Colors.white,
                 elevation: 8.0,
                 clipBehavior: Clip.antiAlias,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -151,7 +158,7 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
                   _scanLocationNo.isNotEmpty && _scanPackNo.isNotEmpty
                       ? dropCurrentItem(_scanLocationNo, _scanPackNo)
                       : displayToast(msg:  'Please Scan Codes and Try Again'),
-                  color: Color(0xff2c51a4),
+                  color: Color(0xff2424143),
                 ),
               ),
             ],
@@ -246,7 +253,7 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
           if (jsonResponse != null) {
             _currentScannedCode = jsonResponse["decodedData"].toString().trim();
 
-            if(_scanLocationNo.isEmpty) {
+            if(_scanLocationNo.isEmpty||_scanLocationNo=='') {
               if(widget.locationSavedCodes.contains(_currentScannedCode)){
                 setState(() {
                   _scanLocationNo = _currentScannedCode.toString();
@@ -289,7 +296,7 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
   popAndLoadPage(dropOrderID) {
     Navigator.pop(context);
     Navigator.pop(context);
-    goToPage(context, DropOrderDetails(dropOrderID));
+    goToPage(context, BulkDropOrderDetails(dropOrderID,widget.orderNo,widget.Fname));
   }
 
   Future<void> initUi() async {
@@ -313,7 +320,7 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
 
   _displayLocationSerialNo() {
     return Card(
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
       child: Padding(
@@ -336,9 +343,21 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
                   child: Text(
                     _scanLocationNo,
                     style: kTextStyleSmall.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
-                ),
+                        fontWeight: FontWeight.bold, color: Colors.black,fontSize: 12),
+                  ),),
+                // Expanded(
+                //   flex: 2,
+                //   child: GestureDetector(
+                //     onTap: (){
+                //       setState(() {
+                //         _scanLocationNo=='';
+                //       });
+                //     },
+                //     child: Icon(
+                //         Icons.delete
+                //
+                //     ),
+                //   ),),
               ],
             ),
             kHeightSmall,
@@ -350,38 +369,95 @@ class _BulkDOScanLocationState extends State<BulkDOScanLocation> {
 
   _displayItemsSerialNo() {
     return Card(
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
       child: Padding(
         padding: kMarginPaddSmall,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Pack Code: ',
-                    style: kTextStyleSmall.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black),
+            DataTable(
+                sortColumnIndex: 0,
+                sortAscending: true,
+                columnSpacing: 0,
+                horizontalMargin: 0,
+
+                // columnSpacing: 10,
+
+                columns: [
+                  DataColumn(
+                    label: SizedBox(
+                      // width:0,
+                      child:  Text(
+                        'Pack Codes  ',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    _scanPackNo.toString(),
-                    style: kTextStyleSmall.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
+
+                ],
+                rows: List.generate(
+                    _scanPackNo.length,
+                        (index) => DataRow(
+                      // selected: true,
+                      cells: [
+                        DataCell(
+                          Container(
+                            height:40,
+
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                _scanPackNo[index]
+                                    .toString(),
+                                style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight:
+                                    FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    ))),
+
             kHeightSmall,
           ],
         ),
       ),
+
+      // Padding(
+      //   padding: kMarginPaddSmall,
+      //   child: Column(
+      //     children: [
+      //       Row(
+      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //         children: [
+      //           Expanded(
+      //             flex: 2,
+      //             child: Text(
+      //               'Pack Code:',
+      //               style: kTextStyleSmall.copyWith(
+      //                   fontWeight: FontWeight.bold, color: Colors.black),
+      //             ),
+      //           ),
+      //           Expanded(
+      //             flex: 4,
+      //             child: Text(
+      //               _scanPackNo.toString(),
+      //               style: kTextStyleSmall.copyWith(
+      //                   fontWeight: FontWeight.bold, color: Colors.black),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //       kHeightSmall,
+      //     ],
+      //   ),
+      // ),
     );
   }
 

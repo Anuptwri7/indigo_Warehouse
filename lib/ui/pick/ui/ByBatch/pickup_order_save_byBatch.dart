@@ -21,8 +21,11 @@ class PickUpOrderByBatchSaveLocation extends StatefulWidget {
   int orderId;
   int purchaseDetail;
   double qty;
+  String orderNo;
+  String Fname;
+  String Lname;
 
-  PickUpOrderByBatchSaveLocation(this.purchaseDetail, this.orderId, this.qty);
+  PickUpOrderByBatchSaveLocation(this.purchaseDetail, this.orderId, this.qty,this.orderNo,this.Fname,this.Lname);
 
   @override
   State<PickUpOrderByBatchSaveLocation> createState() =>
@@ -43,6 +46,7 @@ class _PickUpOrderByBatchSaveLocationState
   List<String> location = [];
   bool isSerializable = false;
   String errorMessage = '';
+  List pack=[];
 
   Future searchHandling() async {
     // if (_currentScannedLocationList[0] == "") {
@@ -91,6 +95,7 @@ class _PickUpOrderByBatchSaveLocationState
     super.initState();
     log("location "+_currentScannedLocation);
     _newScannedLocationInitDataWedgeListener();
+    _newScannedLocationInitDataWedgeListenerPack();
   }
 
 
@@ -121,8 +126,11 @@ class _PickUpOrderByBatchSaveLocationState
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Save Pickup Codes'),
-          backgroundColor: Color(0xff2c51a4),
+          title: Text('Save Pickup Codes',
+            style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -134,7 +142,7 @@ class _PickUpOrderByBatchSaveLocationState
                 child: Card(
                   margin: kMarginPaddSmall,
                   // color: const Color(0xffeff3ff),
-                  color: Color.fromARGB(255, 204, 212, 241),
+                  color: Colors.brown.shade800,
 
                   elevation: kCardElevation,
                   shape: RoundedRectangleBorder(
@@ -156,7 +164,7 @@ class _PickUpOrderByBatchSaveLocationState
                                     child: Text(
                                       "Locations",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,color: Colors.white),
                                     ),
                                   ),
                                   Container(
@@ -206,7 +214,7 @@ class _PickUpOrderByBatchSaveLocationState
                               children: [
                                 Text(
                                   "Remaining Qty",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                                 ),
                                 Container(
                                   width: MediaQuery.of(context).size.width/4,
@@ -268,17 +276,17 @@ class _PickUpOrderByBatchSaveLocationState
                   height: 100,
                   width: 250,
                   decoration: BoxDecoration(
-                      color: Colors.green[50],
+                      color: Colors.grey,
                       borderRadius: BorderRadius.circular(20)),
                   child: Center(
                       child: _currentScannedLocation.isEmpty
                           ? Text(
                         "Please Scan location",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20,color: Colors.white),
                       )
                           : Text(
                         "Please Scan location",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20,color: Colors.white),
                       )),
 
                 ),
@@ -374,11 +382,7 @@ class _PickUpOrderByBatchSaveLocationState
                           Container(
                             height: 30,
                             width: 150,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 218, 225, 247),
-                              // color: const Color(0xffeff3ff),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+
                             child: Center(
                                 child: Text(
                                   "${data[index].code}",
@@ -400,10 +404,7 @@ class _PickUpOrderByBatchSaveLocationState
                           Container(
                             height: 30,
                             width: 200,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 218, 225, 247),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+
                             child: Center(
                                 child: Text(
                                   "${data[index].locationCode}",
@@ -438,15 +439,41 @@ class _PickUpOrderByBatchSaveLocationState
                   jsonResponse["decodedData"].toString().trim();
               if (location.contains(_currentScannedLocation)) {
                 if(_currentScannedLocationList.contains(jsonResponse["decodedData"].toString().trim())){
-
+                  if(_currentScannedLocationList.isNotEmpty){
+                    pack.add(_currentScannedLocation);
+                  }
+                  log("alsdkj"+pack.toString());
                   _currentScannedLocationList.clear();
                   _currentScannedLocationList.add( jsonResponse["decodedData"].toString().trim());
                   log(_currentScannedLocationList.toString());
-
                 }
                 else{
                   _currentScannedLocationList.add( jsonResponse["decodedData"].toString().trim());
                 }
+              } else {
+              }
+              log("Scanned Location No : ${_currentScannedLocation.toString()}");
+            } else {}
+            setState(() {});
+          } catch (e) {}
+        } else {}
+      },
+    );
+  }
+  Future<void> _newScannedLocationInitDataWedgeListenerPack() async {
+    ZebraDataWedge.listenForDataWedgeEvent(
+          (response) {
+        if (response != null && response is String) {
+          Map<String, dynamic>? jsonResponse;
+          try {
+            jsonResponse = json.decode(response);
+            if (jsonResponse != null) {
+
+              _currentScannedLocation =
+                  jsonResponse["decodedData"].toString().trim();
+              if (_currentScannedLocation.startsWith("PK")) {
+             pack.add(_currentScannedLocation);
+             log(pack.toString());
 
               } else {
 
@@ -544,7 +571,8 @@ class _PickUpOrderByBatchSaveLocationState
 
             context,
             MaterialPageRoute(
-                builder: (context) => PickUpOrderByBatchDetails(order)));
+                builder: (context) => PickUpOrderByBatchDetails(widget.orderNo,widget.Fname,widget.Lname,order)));
+
 
         // displayToast(msg: "save Succefully");
       } else {
@@ -573,7 +601,8 @@ class _PickUpOrderByBatchSaveLocationState
     // response = await NetworkHelper(
     //         '$finalUrl${StringConst.baseUrl+StringConst.urlCustomerOrderApp}pack-type?limit=0&purchase_detail=$receivedOrderID&location_code=$search')
     //     .getOrdersWithToken();
-
+log("Packs list"+response.body);
+log('https://$finalUrl${StringConst.urlCustomerOrderApp}pack-type?limit=0&purchase_detail=$receivedOrderID&location_code=$search&code=${pack.isNotEmpty?pack[0]:''}');
     if (response.statusCode == 401) {
       replacePage(LoginScreen(), context);
     } else {
@@ -590,6 +619,6 @@ class _PickUpOrderByBatchSaveLocationState
   popAndLoadPage(pkOrderID) {
     Navigator.pop(context);
     Navigator.pop(context);
-    goToPage(context, PickUpOrderByBatchDetails(pkOrderID));
+    goToPage(context, PickUpOrderByBatchDetails(widget.orderNo,widget.Fname,widget.Lname,pkOrderID));
   }
 }

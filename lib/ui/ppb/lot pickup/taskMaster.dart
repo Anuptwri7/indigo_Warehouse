@@ -99,8 +99,11 @@ class _TaskMasterPageState extends State<TaskMasterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lot Pickup List"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Lot Pickup List",
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -296,7 +299,7 @@ class _TaskMasterPageState extends State<TaskMasterPage> {
                   ? displayToast(msg: "Not Verified")
                   :data[index].status==4?displayToast(msg: "Lot Picked"):
               goToPage(context,
-                  TaskDetailPage( data[index].id));
+                  TaskDetailPage( data[index].id,data[index].taskNo.toString()));
             },
             child: Card(
               margin: kMarginPaddSmall,
@@ -310,73 +313,35 @@ class _TaskMasterPageState extends State<TaskMasterPage> {
                   children: [
                     Row(
                       children: [
+                        Icon(Icons.battery_charging_full_outlined),
+                        Text("${data[index].taskNo}"),
+
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.brown.shade800,
+                          child:  Text('${data[index].name!.substring(0,1).toUpperCase() }'),
+                        ),
+                        SizedBox(width: 10,),
                         Container(
+                          width: 200,
                           child: Text(
-                            "Task Name:",
+                            "${data[index].name}",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                              child: Text(
-                                "${data[index].name }",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
-                        ),
+                        // SizedBox(
+                        //   width: 10,
+                        // ),
+
                       ],
                     ),
                     kHeightSmall,
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            "Order No:",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                              child: Text(
-                                "${data[index].taskNo}",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
-                        ),
-                      ],
-                    ),
+
                     // kHeightMedium,
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.end,

@@ -14,7 +14,8 @@ import 'model/taskDetail.dart';
 
 class TaskDetailPage extends StatefulWidget {
   final orderID;
-  TaskDetailPage(this.orderID);
+  String orderNo;
+  TaskDetailPage(this.orderID,this.orderNo);
 
   @override
   State<TaskDetailPage> createState() => _TaskDetailPageState();
@@ -40,29 +41,53 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pickup Details"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Pickup Details",
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: FutureBuilder<List<Results>?>(
-          future: pickUpDetails,
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return const Center(child: CircularProgressIndicator());
-              default:
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return dropItemDetails(snapshot.data);
-                }
-            }
-          }),
+      body: Card(
+        margin: kMarginPaddSmall,
+        color: Colors.white,
+        elevation: kCardElevation,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0)),
+        child: Container(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left:100.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.battery_charging_full_outlined),
+                    Text(widget.orderNo),
+                  ],
+                ),
+              ),
+              FutureBuilder<List<Results>?>(
+                  future: pickUpDetails,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const Center(child: CircularProgressIndicator());
+                      default:
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return dropItemDetails(snapshot.data);
+                        }
+                    }
+                  }),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Future<List<Results>?> TaskDetailServices(int receivedOrderID) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     prefs.setString(StringConst.pickUpOrderID, widget.orderID.toString());
     String finalUrl = prefs.getString("subDomain").toString();
     final response = await http.get(
@@ -104,11 +129,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               onTap: ()=>{
                 goToPage(
                     context,
-                    BeforePickup(data[index].id))
+                    BeforePickup(data[index].id,data[index].outputItem!.isSerializable))
               },
               child: Card(
                 margin: kMarginPaddSmall,
-                color:data[index].picked==true?Colors.grey.shade400: Colors.white,
+                color:Colors.white,
                 elevation: kCardElevation,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
@@ -118,73 +143,33 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     children: [
                       Row(
                         children: [
-                          Container(
-                            child: Text(
-                              "Item Name:",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                          CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Color(0xffF3F6F9),
+                            child:  Text('${data[index].outputItem!.name!.substring(0,1).toUpperCase() }'),
                           ),
-                          SizedBox(
-                            width: 30,
+                          SizedBox(width: 10,),
+                          Column(
+                            children: [
+                              Text(
+                                "${data[index].outputItem!.name}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${data[index].lotNo}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              kHeightSmall,
+
+
+
+                            ],
                           ),
-                          Container(
-                            height: 30,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffeff3ff),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xffeff3ff),
-                                  offset: Offset(-2, -2),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                                child: Text(
-                                  "${data[index].outputItem!.name}",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )),
-                          ),
+                          SizedBox(width: 80,),
+                          Image.asset(data[index].picked==true?"assets/images/picked.png":"assets/images/notPicked.png")
                         ],
                       ),
-                      SizedBox(height: 10,),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "Lot Number:",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          Container(
-                            height: 30,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffeff3ff),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xffeff3ff),
-                                  offset: Offset(-2, -2),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                                child: Text(
-                                  "${data[index].lotNo}",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )),
-                          ),
-                        ],
-                      ),
+
 
                       // poInRowDesign('Item Name :',data[index].itemName),
                       // kHeightSmall,
@@ -228,7 +213,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
         goToPage(
             context,
-            BeforePickup(data[index].id))
+            BeforePickup(data[index].id,data[index].output!.isSerializable))
       },
     )
         : ElevatedButton(

@@ -29,8 +29,10 @@ class _DepartmentTransferReceiveState extends State<DepartmentTransferReceive> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Department Receive Order"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Department Receive Order",  style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        elevation: 0,
       ),
       body: ListView(
         shrinkWrap: true,
@@ -80,24 +82,37 @@ class _DepartmentTransferReceiveState extends State<DepartmentTransferReceive> {
               padding: kMarginPaddSmall,
               child: Column(
                 children: [
-                  poInRowDesign('Transfer No :', data[index].transferNo),
+                  Row(
+                    children: [
+                      Icon(Icons.battery_charging_full_outlined),
+                      Text("${data[index].transferNo}"),
+                      SizedBox(width: 60,),
+                      Text("Rs.${data[index].grandTotal}")
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.brown.shade800,
+                        child:  Text('${data[index].createdByUserName!.substring(0,1).toUpperCase() }'),
+                      ),
+                      SizedBox(width: 10,),
+                      Container(
+                        width: 200,
+                        child: Text(
+                          "${data[index].createdByUserName }",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+
+                    ],
+                  ),
                   kHeightSmall,
-                  poInRowDesign(
-                      'Date :',
-                      data[index]
-                          .createdDateAd!
-                          .toLocal()
-                          .toString()
-                          .substring(0, 10)),
-                  kHeightSmall,
-                  poInRowDesign('From :',
-                      data[index].fromDepartment!.name),
-                  kHeightSmall,
-                  // poInRowDesign(
-                  //     'Remarks :',
-                  //     data[index].remarks.isNotEmpty
-                  //         ? data[index].remarks
-                  //         : "-"),
                   kHeightSmall,
                   RoundedButtons(
                     buttonText: 'View Details',
@@ -111,7 +126,7 @@ class _DepartmentTransferReceiveState extends State<DepartmentTransferReceive> {
                               data[index].createdDateAd.toString(),data[index].createdDateBs.toString(),data[index].toDepartment!.id.toString())):
                       Fluttertoast.showToast(msg: "Task Completed");
                     },
-                    color: data[index].isReceived==false? Color(0xff2c51a4):Colors.grey,
+                    color: data[index].isReceived==false?Colors.brown.shade800:Colors.grey,
                   )
                 ],
               ),

@@ -78,8 +78,10 @@ class _LotPickupReturnMasterState extends State<LotPickupReturnMaster> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lot Pickup Return"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Lot Pickup Return",  style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -87,149 +89,6 @@ class _LotPickupReturnMasterState extends State<LotPickupReturnMaster> {
         child: Column(
 
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 5),
-            //   child: Row(
-            //     children: [
-            //       Container(
-            //         height: 40,
-            //         width: MediaQuery.of(context).size.width/3.2,
-            //         margin: const EdgeInsets.only(top:10,right: 10),
-            //
-            //         //margin: EdgeInsets.only(left:10,right:60),
-            //         decoration: BoxDecoration(
-            //             color: Colors.white,
-            //             // border:Border.all(color:Color(0xff2C51A4).withOpacity(0.8) ) ,
-            //             borderRadius: BorderRadius.circular(15),
-            //             boxShadow: [
-            //               BoxShadow(
-            //                 color: Colors.grey,
-            //                 spreadRadius: 1,
-            //                 blurRadius: 2,
-            //                 offset: Offset(4, 4),
-            //               )
-            //             ]),
-            //         padding: const EdgeInsets.only(left:5, right: 0),
-            //         child: DropdownButton<String>(
-            //           // value: dropdownValue,
-            //           hint: Text(dropdownValue),
-            //           // icon: const Icon(Icons.arrow_downward,color: Color,),
-            //           elevation: 16,
-            //           style: const TextStyle(color: Colors.grey),
-            //           underline: Container(
-            //             height: 2,
-            //             color: Colors.white,
-            //           ),
-            //           onChanged: (String? value) {
-            //             // This is called when the user selects an item.
-            //             setState(() {
-            //               dropdownValue = value!;
-            //               value=="Pending"?status='1':value=="Completed"?status='4':'';
-            //             });
-            //           },
-            //           items: list.map<DropdownMenuItem<String>>((String value) {
-            //             return DropdownMenuItem<String>(
-            //               value: value,
-            //               child: Text(value),
-            //             );
-            //           }).toList(),
-            //         ),
-            //       ),
-            //       Padding(
-            //         padding: const EdgeInsets.only(top:10.0),
-            //         child: Container(
-            //           height: 40,
-            //           // width: 40,
-            //           child: RoundedSmallButtons(
-            //
-            //             icon: Icons.delete,
-            //             color: Colors.white,
-            //             onTap: (){
-            //               setState(() {
-            //                 status='';
-            //                 dropdownValue="Select status";
-            //               });
-            //             },
-            //           ),
-            //         ),
-            //       ),
-            //
-            //       Container(
-            //         height: 40,
-            //         width: MediaQuery.of(context).size.width/3.4,
-            //         margin: const EdgeInsets.only(top:10,left: 5,right: 5),
-            //
-            //         //margin: EdgeInsets.only(left:10,right:60),
-            //         decoration: BoxDecoration(
-            //             color: Colors.white,
-            //             // border:Border.all(color:Color(0xff2C51A4).withOpacity(0.8) ) ,
-            //             borderRadius: BorderRadius.circular(15),
-            //             boxShadow: [
-            //               BoxShadow(
-            //                 color: Colors.grey,
-            //                 spreadRadius: 1,
-            //                 blurRadius: 2,
-            //                 offset: Offset(4, 4),
-            //               )
-            //             ]),
-            //         padding: const EdgeInsets.only(left: 10, right: 0),
-            //         child: DropdownButton<String>(
-            //           // value: dropdownValueDate,
-            //           hint: Text(dropdownValueDate),
-            //           // icon: const Icon(Icons.arrow_downward,color: Color,),
-            //           elevation: 16,
-            //           style: const TextStyle(color: Colors.grey),
-            //           underline: Container(
-            //             height: 2,
-            //             color: Colors.white,
-            //           ),
-            //           onChanged: (String? value) {
-            //             // This is called when the user selects an item.
-            //             setState(() {
-            //               dropdownValueDate = value!;
-            //               log(value);
-            //               value=="Today"?StartdateController.text=DateTime.now().year.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().day.toString()
-            //                   :value=="Yesterday"?StartdateController.text=DateTime.now().subtract(Duration(days:1)).year.toString()+'-'+DateTime.now().subtract(Duration(days:1)).month.toString()+'-'+DateTime.now().subtract(Duration(days:1)).day.toString()
-            //                   :value=="Last Week"?StartdateController.text=DateTime.now().subtract(Duration(days:7)).year.toString()+'-'+DateTime.now().subtract(Duration(days:7)).month.toString()+'-'+DateTime.now().subtract(Duration(days:7)).day.toString():""
-            //               ;
-            //               value=="Today"?EnddateController.text=DateTime.now().year.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().day.toString()
-            //                   :value=="Yesterday"?EnddateController.text=DateTime.now().subtract(Duration(days:1)).year.toString()+'-'+DateTime.now().subtract(Duration(days:1)).month.toString()+'-'+DateTime.now().subtract(Duration(days:1)).day.toString()
-            //                   :value=="Last Week"?EnddateController.text=DateTime.now().year.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().day.toString():""
-            //               ;
-            //               log(StartdateController.text);
-            //               log(EnddateController.text);
-            //             });
-            //           },
-            //           items: listDate.map<DropdownMenuItem<String>>((String value) {
-            //             return DropdownMenuItem<String>(
-            //               value: value,
-            //               child: Text(value),
-            //             );
-            //           }).toList(),
-            //         ),
-            //       ),
-            //       Padding(
-            //         padding: const EdgeInsets.only(top:10.0),
-            //         child: Container(
-            //           height: 40,
-            //           child: RoundedSmallButtons(
-            //
-            //             icon: Icons.delete,
-            //             color: Colors.white,
-            //             onTap: (){
-            //               setState(() {
-            //                 dropdownValueDate="Select date";
-            //                 StartdateController.text="";
-            //                 EnddateController.text="";
-            //               });
-            //             },
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(height: 10,),
 
             ListView(
               // controller: controller,
@@ -271,11 +130,9 @@ class _LotPickupReturnMasterState extends State<LotPickupReturnMaster> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              // data[index].picked==true
-              //     ? displayToast(msg: "Not Verified")
-              //     :data[index].status==4?displayToast(msg: "Lot Picked"):
+
               goToPage(context,
-                  LotPickupReturnDetail( masterId:data[index].id.toString()));
+                  LotPickupReturnDetail( masterId:data[index].id.toString(),lotNo: data[index].lotNo,name: data[index].name,));
             },
             child: Card(
               margin: kMarginPaddSmall,
@@ -289,111 +146,36 @@ class _LotPickupReturnMasterState extends State<LotPickupReturnMaster> {
                   children: [
                     Row(
                       children: [
-                        Container(
-                          child: Text(
-                            "Lot Name:",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                              child: Text(
-                                "${data[index].name }",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
-                        ),
+                        Icon(Icons.battery_charging_full_outlined),
+                        Text("${data[index].lotNo}"),
+
                       ],
                     ),
-                    kHeightSmall,
+                    SizedBox(height: 10,),
                     Row(
                       children: [
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.brown.shade800,
+                          child:  Text('${data[index].name!.substring(0,1).toUpperCase() }'),
+                        ),
+                        SizedBox(width: 10,),
                         Container(
+                          width: 200,
                           child: Text(
-                            "Order No:",
+                            "${data[index].name }",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                              child: Text(
-                                "${data[index].lotNo}",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
-                        ),
+                        // SizedBox(
+                        //   width: 10,
+                        // ),
+
                       ],
                     ),
-                    // kHeightMedium,
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.end,
-                    //   children: [
-                    //     Container(
-                    //       child: ElevatedButton(
-                    //         onPressed: () {
-                    //           data[index].isApproved==false
-                    //               ? displayToast(msg: "Not Verified")
-                    //               :data[index].status==4?displayToast(msg: "Lot Picked"):
-                    //           goToPage(context,
-                    //               TaskDetailPage( data[index].id));
-                    //         },
-                    //         child: Icon(Icons.check),
-                    //         style: ButtonStyle(
-                    //           shadowColor: MaterialStateProperty.all<Color>(
-                    //               Colors.grey),
-                    //           backgroundColor:
-                    //           MaterialStateProperty.all<Color>(        data[index].isApproved==false||data[index].status==4
-                    //               ? Color.fromARGB(255, 68, 110, 201)
-                    //               .withOpacity(0.3)
-                    //               : Color.fromARGB(255, 68, 110, 201)),
-                    //           shape: MaterialStateProperty.all<
-                    //               RoundedRectangleBorder>(
-                    //             RoundedRectangleBorder(
-                    //               borderRadius: BorderRadius.circular(15),
-                    //               side: BorderSide(color: Colors.grey),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     SizedBox(
-                    //       width: 20,
-                    //     ),
-                    //
-                    //   ],
-                    // ),
+
+
+
                   ],
                 ),
               ),

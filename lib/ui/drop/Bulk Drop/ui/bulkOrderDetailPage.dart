@@ -18,7 +18,9 @@ import 'bulkDropScanPage.dart';
 class BulkDropOrderDetails extends StatefulWidget {
 
   final orderID;
-  BulkDropOrderDetails(this.orderID);
+  String orderNo;
+  String Fname;
+  BulkDropOrderDetails(this.orderID,this.orderNo,this.Fname);
 
   @override
   State<BulkDropOrderDetails> createState() => _BulkDropOrderDetailsState();
@@ -48,23 +50,90 @@ class _BulkDropOrderDetailsState extends State<BulkDropOrderDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(StringConst.bulkdropOrdersDetail),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text(StringConst.bulkdropOrdersDetail,
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: FutureBuilder<List<Result>?>(
-          future: dropOrderDetails,
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return const Center(child: CircularProgressIndicator());
-              default:
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return dropItemDetails(snapshot.data);
-                }
-            }
-          }),
+      body: Card(
+        margin: kMarginPaddSmall,
+        color:
+        Colors.white,
+
+        elevation: kCardElevation,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0)),
+
+        child:Container(
+          padding: kMarginPaddSmall,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left:100.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.battery_charging_full_outlined),
+                    Text("${widget.orderNo}"),
+                  ],
+                ),
+              ),
+             // ElevatedButton(onPressed: (){
+             //   showModalBottomSheet(
+             //       context: context,
+             //       builder: (BuildContext context){
+             //         return SizedBox(
+             //           height: 400,
+             //           child: Center(
+             //             child: Text(""),
+             //           ),
+             //         );
+             //       });
+             // }, child: Text("hit me")),
+
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.only(left:60.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Color(0xffF3F6F9),
+                      child:  Text('${widget.Fname.substring(0,1).toUpperCase() }'),
+                    ),
+                    SizedBox(width: 10,),
+                    Container(
+                      width: 200,
+                      child: Text(
+                        "${widget.Fname}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
+
+                  ],
+                ),
+              ),
+              FutureBuilder<List<Result>?>(
+                  future: dropOrderDetails,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const Center(child: CircularProgressIndicator());
+                      default:
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return dropItemDetails(snapshot.data);
+                        }
+                    }
+                  }),
+            ],
+          ),
+        )
+      ),
     );
   }
 
@@ -143,118 +212,66 @@ class _BulkDropOrderDetailsState extends State<BulkDropOrderDetails> {
           savePackCodeList(data[index].poPackTypeCodes);
 
           return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              margin: kMarginPaddSmall,
-              color: Colors.white,
-              elevation: kCardElevation,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0)),
-              child: Container(
-                padding: kMarginPaddSmall,
-                child: Column(
-                  children: [
-                    Row(
+            padding: const EdgeInsets.all(2.0),
+            child: GestureDetector(
+              onTap: (){
+                data[index].poPackTypeCodes[index].location==null
+                    ?
+                goToPage(context,
+                  BulkDOScanLocation(
+                    data[index].poPackTypeCodes,
+                    widget.orderNo,
+                    widget.Fname,
+                    locationCodesList,
+                  ),
+                )
+                    :  displayToastSuccess(msg : 'Item Already Dropped');
+                ;
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child:Card(
+                  shadowColor: Colors.white,
+                  margin: kMarginPaddSmall,
+                  // color: data[index].picked == false
+                  //     ? Colors.white
+                  //     : Colors.grey,
+                  elevation: kCardElevation,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0)),
+                  child: Container(
+                    padding: kMarginPaddSmall,
+                    child: Column(
                       children: [
-                        Container(
-                          child: Text("Item Name:",style: TextStyle(fontWeight: FontWeight.bold),),
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Color(0xffF3F6F9),
+                              child:  Text('${data[index].itemName.substring(0,1).toUpperCase() }'),
+                            ),
+                            SizedBox(width: 10,),
+                            Column(
+                              children: [
+                                Text(
+                                  "${data[index].itemName}",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                kHeightSmall,
+                                Text(
+                                  "Qty:${data[index].poPackTypeCodes.length.toString()}",
+                                  style: TextStyle(),
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: 80,),
+                            Image.asset(data[index].poPackTypeCodes[0].location==null?"assets/images/notPicked.png":"assets/images/picked.png")
+                          ],
                         ),
 
-                        Container(
-                          height: 30,
-                          width: 200,
-                          decoration:  BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Center(child: Text("${data[index].itemName}",style: TextStyle(fontWeight: FontWeight.bold),)),
-                        ),
                       ],
                     ),
-                    // poInRowDesign('Item Name :',data[index].itemName),
-                    kHeightSmall,
-                    Row(
-                      children: [
-                        Container(
-                          child: Text("Packing Type:",style: TextStyle(fontWeight: FontWeight.bold),),
-                        ),
-                        Container(
-                          height: 30,
-                          width: 150,
-                          decoration:  BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Center(child: Text("${data[index].packingType}",style: TextStyle(fontWeight: FontWeight.bold),)),
-                        ),
-                      ],
-                    ),
-                    // poInRowDesign(
-                    //     'Packing Type:' ,data[index].packingType),
-                    kHeightSmall,
-                    Row(
-                      children: [
-                        Container(
-                          child: Text("Received Qty:",style: TextStyle(fontWeight: FontWeight.bold),),
-                        ),
-                        Container(
-                          height: 30,
-                          width: 120,
-                          decoration:  BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Center(child: Text("${data[index].poPackTypeCodes.length.toString()}",style: TextStyle(fontWeight: FontWeight.bold),)),
-                        ),
-                      ],
-                    ),
-                    // poInRowDesign('Received Qty :', data[index].poPackTypeCodes.length.toString()),
-                    kHeightMedium,
-                    locationCheck.contains(null)
-                    //  data[index].poPackTypeCodes[index].location==""
-                         ? RoundedButtons(
-                      buttonText: 'Drop',
-                      onTap: () => goToPage(context,
-                        BulkDOScanLocation(
-                          data[index].poPackTypeCodes,
-                          locationCodesList,
-                        ),
-                      ),
-                      color: Color(0xff2c51a4),
-                    )
-                        :RoundedButtons(
-                      buttonText: 'Dropped',
-                      onTap: () {
-                        return displayToastSuccess(msg : 'Item Alredy Dropped');
-                      },
-                      color: Color(0xff6b88e8),
-                    )
-
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -267,7 +284,7 @@ class _BulkDropOrderDetailsState extends State<BulkDropOrderDetails> {
 
     for(int i = 0; i < poPackTypeCodes.length; i++){
       locationCheck.add(poPackTypeCodes[i].location);
-      log(locationCheck.toString());
+      // log(locationCheck.toString());
     }
 
   }

@@ -99,8 +99,15 @@ class _RePackListUiState extends State<RePackListUi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sale Master"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Sale Master",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -262,18 +269,7 @@ class _RePackListUiState extends State<RePackListUi> {
                         Container(
                           height: 30,
                           width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
+
                           child: Center(
                               child: Text(
                                 "${data[index].saleNo}",

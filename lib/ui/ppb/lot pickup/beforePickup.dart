@@ -17,7 +17,8 @@ import 'model/additional.dart';
 
 class BeforePickup extends StatefulWidget {
   int? orderID;
-  BeforePickup(this.orderID);
+  bool? isSerializable;
+  BeforePickup(this.orderID,this.isSerializable);
   @override
   State<BeforePickup> createState() => _BeforePickupState();
 }
@@ -42,23 +43,33 @@ class _BeforePickupState extends State<BeforePickup> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pickup Details"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Pickup Details",
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+
       ),
-      body: FutureBuilder<List<Results>?>(
-          future: pickUpDetails,
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return const Center(child: CircularProgressIndicator());
-              default:
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return dropItemDetails(snapshot.data);
-                }
-            }
-          }),
+      body: Column(
+        children: [
+          Container(
+            child: FutureBuilder<List<Results>?>(
+                future: pickUpDetails,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return const Center(child: CircularProgressIndicator());
+                    default:
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return dropItemDetails(snapshot.data);
+                      }
+                  }
+                }),
+          ),
+        ],
+      ),
     );
   }
 
@@ -107,11 +118,11 @@ class _BeforePickupState extends State<BeforePickup> {
               onTap: ()=>{
                 data[index].picked==true?Fluttertoast.showToast(msg: "Already Picked"):goToPage(
                     context,
-                    PickUpOrderByBatchSaveLocation(data[index].purchaseDetail, data[index].id, data[index].qty))
+                    PickUpOrderByBatchSaveLocation(data[index].purchaseDetail, data[index].id, data[index].qty,data[index].itemIsSerializable))
               },
               child: Card(
                 margin: kMarginPaddSmall,
-                color: data[index].picked==true?Colors.grey.shade400: Colors.white,
+                color:  Colors.white,
                 elevation: kCardElevation,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
@@ -121,73 +132,33 @@ class _BeforePickupState extends State<BeforePickup> {
                     children: [
                       Row(
                         children: [
-                          Container(
-                            child: Text(
-                              "Item Name:",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                          CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Color(0xffF3F6F9),
+                            child:  Text('${data[index].itemName!.substring(0,1).toUpperCase() }'),
                           ),
-                          SizedBox(
-                            width: 30,
+                          SizedBox(width: 10,),
+                          Column(
+                            children: [
+                              Text(
+                                "${data[index].itemName}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${data[index].itemCode}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              kHeightSmall,
+
+
+
+                            ],
                           ),
-                          Container(
-                            height: 30,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffeff3ff),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xffeff3ff),
-                                  offset: Offset(-2, -2),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                                child: Text(
-                                  "${data[index].itemName}",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )),
-                          ),
+                          SizedBox(width: 80,),
+                          Image.asset(data[index].picked==true?"assets/images/picked.png":"assets/images/notPicked.png")
                         ],
                       ),
-                      SizedBox(height: 10,),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "Item code:",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          Container(
-                            height: 30,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffeff3ff),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xffeff3ff),
-                                  offset: Offset(-2, -2),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                                child: Text(
-                                  "${data[index].itemCode}",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )),
-                          ),
-                        ],
-                      ),
+
 
                       // // poInRowDesign('Item Name :',data[index].itemName),
                       // kHeightSmall,
@@ -212,11 +183,6 @@ class _BeforePickupState extends State<BeforePickup> {
         : const Text('We have no Data for now');
   }
 
-  // void savePackCodeList(List<CustomerPackingType> customerPackingTypes) {
-  //   for (int i = 0; i < customerPackingTypes.length; i++) {
-  //     packLocations.add(customerPackingTypes[i].locationCode ?? "" + "\n");
-  //   }
-  // }
 
   String showPickUpLocations() {
     return packLocations.join(" , ").toString();

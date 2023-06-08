@@ -21,9 +21,11 @@ class PickUpOrderByBatchSaveLocation extends StatefulWidget {
   int orderId;
   int purchaseDetail;
   double qty;
+  String orderNo;
+  String Fname;
+  String Lname;
 
-  PickUpOrderByBatchSaveLocation(this.purchaseDetail, this.orderId, this.qty);
-
+  PickUpOrderByBatchSaveLocation(this.purchaseDetail, this.orderId, this.qty,this.orderNo,this.Fname,this.Lname);
   @override
   State<PickUpOrderByBatchSaveLocation> createState() =>
       _PickUpOrderByBatchSaveLocationState();
@@ -544,7 +546,8 @@ class _PickUpOrderByBatchSaveLocationState
 
             context,
             MaterialPageRoute(
-                builder: (context) => PickUpOrderByBatchDetails(order)));
+                builder: (context) => PickUpOrderByBatchDetails(widget.orderNo,widget.Fname,widget.Lname,order)));
+
 
         // displayToast(msg: "save Succefully");
       } else {
@@ -590,6 +593,6 @@ class _PickUpOrderByBatchSaveLocationState
   popAndLoadPage(pkOrderID) {
     Navigator.pop(context);
     Navigator.pop(context);
-    goToPage(context, PickUpOrderByBatchDetails(pkOrderID));
+    goToPage(context, PickUpOrderByBatchDetails(widget.orderNo,widget.Fname,widget.Lname,pkOrderID));
   }
 }

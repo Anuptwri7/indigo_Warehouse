@@ -99,8 +99,10 @@ class _QtyDropMasterState extends State<QtyDropMaster> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Weight assign List"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Weight assign List",  style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -316,127 +318,56 @@ class _QtyDropMasterState extends State<QtyDropMaster> {
         itemCount: data.length,
         // physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return Card(
-            margin: kMarginPaddSmall,
-            color: Colors.white,
-            elevation: kCardElevation,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Container(
-              padding: kMarginPaddSmall,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          "Customer Name:",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+          return GestureDetector(
+            onTap: (){
+              goToPage(context,
+                  ScanToDropTheMeasurement(id:data[index].id.toString() ));
+            },
+            child: Card(
+              margin: kMarginPaddSmall,
+              color: Colors.white,
+              elevation: kCardElevation,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0)),
+              child: Container(
+                padding: kMarginPaddSmall,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.battery_charging_full_outlined),
+                        Text("${data[index].purchaseNo}"),
+                        SizedBox(width: 60,),
+                        Text("Rs.${data[index].grandTotal}")
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.brown.shade800,
+                          child:  Text('${data[index].createdByUserName!.substring(0,1).toUpperCase() }'),
                         ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        height: 30,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                            child: Text(
-                              "${data[index].createdByUserName}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
-                      ),
-                    ],
-                  ),
-                  kHeightSmall,
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          "Order No:",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        height: 30,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                            child: Text(
-                              "${data[index].lotNo}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
-                      ),
-                    ],
-                  ),
-                  kHeightMedium,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // data[index]
-                            // .dropped==true
-                            // ? displayToast(msg: "Already Dropped")
-                            // :
-                            goToPage(context,
-                                ScanToDropTheMeasurement(id:data[index].id.toString() ));
-                          },
-                          child: Icon(Icons.check),
-                          style: ButtonStyle(
-                            shadowColor: MaterialStateProperty.all<Color>(
-                                Colors.grey),
-                            backgroundColor:
-                            MaterialStateProperty.all<Color>(data[index]
-                                .dropped==true
-
-                                ? Color.fromARGB(255, 68, 110, 201)
-                                .withOpacity(0.3)
-                                : Color.fromARGB(255, 68, 110, 201)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                side: BorderSide(color: Colors.grey),
-                              ),
-                            ),
+                        SizedBox(width: 10,),
+                        Container(
+                          width: 200,
+                          child: Text(
+                            "${data[index].createdByUserName }",
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
+                        // SizedBox(
+                        //   width: 10,
+                        // ),
 
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+
+                    kHeightMedium,
+
+                  ],
+                ),
               ),
             ),
           );

@@ -75,8 +75,14 @@ class _ChalanRemoveRepackagedPackState extends State<ChalanRemoveRepackagedPack>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Chalan Remove Re-Packaged Codes',style:TextStyle(fontSize: 16)),
-        backgroundColor: Color(0xff2c51a4),
+      appBar: AppBar(title: const Text('Chalan Remove Re-Packaged Codes',
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 15,
+              fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -94,18 +100,7 @@ class _ChalanRemoveRepackagedPackState extends State<ChalanRemoveRepackagedPack>
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${_rePackCodesList.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -120,18 +115,7 @@ class _ChalanRemoveRepackagedPackState extends State<ChalanRemoveRepackagedPack>
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${_scanPackCode.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -147,33 +131,6 @@ class _ChalanRemoveRepackagedPackState extends State<ChalanRemoveRepackagedPack>
             ),
             printPackCodes(_rePackCodesList),
 
-
-
-            // FutureBuilder<List<SalePackingTypeCode>?>(
-            //     future: RepackagingListServices(),
-            //     builder: (context, snapshot) {
-            //       log("data"+snapshot.data.toString());
-            //       switch (snapshot.connectionState) {
-            //
-            //
-            //         case ConnectionState.waiting:
-            //           return const Center(
-            //               child: CircularProgressIndicator());
-            //         default:
-            //           if (snapshot.hasError) {
-            //             return Text('Error: ${snapshot.error}');
-            //           } else {
-            //             return  printPackCodes(snapshot.data);
-            //           }
-            //       }
-            //     }),
-            // Card(
-            //   color: Color(0xffeff3ff),
-            //   elevation: 8.0,
-            //   clipBehavior: Clip.antiAlias,
-            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-            //   child: printPackCodes(),
-            // ),
             kHeightMedium,
             Column(
               children: [
@@ -191,7 +148,7 @@ class _ChalanRemoveRepackagedPackState extends State<ChalanRemoveRepackagedPack>
                 _scanPackCode.isNotEmpty
                     ? dropCurrentItem(_scanLocationNo, _scanPackNo)
                     : displayToast(msg:  'Please Scan Codes and Try Again'),
-                color: Color(0xff2c51a4),
+                color: Colors.brown.shade800,
               ),
             ),
           ],

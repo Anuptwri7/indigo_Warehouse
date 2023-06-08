@@ -62,27 +62,16 @@ class _RePacketUIState extends State<RePacketUI> {
       onPointerDown: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Merge Packet"),
-          backgroundColor: Color(0xff2c51a4),
+          title: const Text("Merge RePacket",
+            style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+          // backgroundColor: Color(0xff2c51a4),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
+
         body: ListView(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Merge Quantity',
-                style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            // Card(
-            //   color: Color(0xffeff3ff),
-            //   elevation: 8.0,
-            //   clipBehavior: Clip.antiAlias,
-            //   shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(12.0)),
-            //   child: Text(
-            //       "${_packCodesListPackInfo.isEmpty ? "Please scan Pack code" : _packCodesListPackInfo}"),
-            // ),
 
             TextFormField(
               // The validator receives the text that the user has entered.
@@ -101,10 +90,8 @@ class _RePacketUIState extends State<RePacketUI> {
               ),
             ),
             kHeightMedium,
-            RoundedButtons(
-                color:Colors.indigo,
-                buttonText: "Start",
-                onTap: (){
+            ElevatedButton(
+                onPressed: (){
                   if(totalMergeQty.text.isNotEmpty){
                     setState(() {
                       readyToScan=true;
@@ -115,8 +102,9 @@ class _RePacketUIState extends State<RePacketUI> {
                   setState(() {
                     _packCodesListPackInfo.clear();
                   });
-                }
-            ),
+                },
+                child: Text("Start")),
+
              Visibility(
                visible: readyToScan,
                child: DataTable(
@@ -126,7 +114,7 @@ class _RePacketUIState extends State<RePacketUI> {
                 columns: const [
                   DataColumn(
                     label: SizedBox(
-                      width: 50,
+                      width: 100,
                       child: Text('Pack Code'),
                     ),
                   ),
@@ -159,34 +147,59 @@ class _RePacketUIState extends State<RePacketUI> {
                         )
                       ),
                       DataCell(
-                       RoundedButtonThree(
-                         color: isSerializable==true?Colors.indigo.shade200:Colors.indigo,
-                         buttonText: "Submit",
-                         onTap: (){
-                           if(isSerializable==true){
-                             if(serialCodes.isNotEmpty){
-                               mergePackqty.add(totalMergePackQty.text);
-                               totalMergePackQty.clear();
-                               log(_packCodesListPackInfo.toString());
-                               mergePack.add(_packCodesListPackInfo[0]);
-                               _packCodesListPackInfo.clear();
-                               isSerializable=false;
-                               savePackAndQty();
-                             }else{
-                               Fluttertoast.showToast(msg: "Please scan the serial codes first",backgroundColor: Colors.indigo);
-                             }
-                           }else{
-                             mergePackqty.add(totalMergePackQty.text);
-                             totalMergePackQty.clear();
-                             log(_packCodesListPackInfo.toString());
-                             mergePack.add(_packCodesListPackInfo[0]);
-                             _packCodesListPackInfo.clear();
-                             isSerializable=false;
-                             savePackAndQty();
-                           }
-
-                         },
-                       )
+                          ElevatedButton(
+                              onPressed: (){
+                                if(isSerializable==true){
+                                  if(serialCodes.isNotEmpty){
+                                    mergePackqty.add(totalMergePackQty.text);
+                                    totalMergePackQty.clear();
+                                    log(_packCodesListPackInfo.toString());
+                                    mergePack.add(_packCodesListPackInfo[0]);
+                                    _packCodesListPackInfo.clear();
+                                    isSerializable=false;
+                                    savePackAndQty();
+                                  }else{
+                                    Fluttertoast.showToast(msg: "Please scan the serial codes first",backgroundColor: Colors.indigo);
+                                  }
+                                }else{
+                                  mergePackqty.add(totalMergePackQty.text);
+                                  totalMergePackQty.clear();
+                                  log(_packCodesListPackInfo.toString());
+                                  mergePack.add(_packCodesListPackInfo[0]);
+                                  _packCodesListPackInfo.clear();
+                                  isSerializable=false;
+                                  savePackAndQty();
+                                }
+                              },
+                              child: Text("Save")),
+                       // RoundedButtonThree(
+                       //   color: isSerializable==true?Colors.indigo.shade200:Colors.indigo,
+                       //   buttonText: "Submit",
+                       //   onTap: (){
+                       //     if(isSerializable==true){
+                       //       if(serialCodes.isNotEmpty){
+                       //         mergePackqty.add(totalMergePackQty.text);
+                       //         totalMergePackQty.clear();
+                       //         log(_packCodesListPackInfo.toString());
+                       //         mergePack.add(_packCodesListPackInfo[0]);
+                       //         _packCodesListPackInfo.clear();
+                       //         isSerializable=false;
+                       //         savePackAndQty();
+                       //       }else{
+                       //         Fluttertoast.showToast(msg: "Please scan the serial codes first",backgroundColor: Colors.indigo);
+                       //       }
+                       //     }else{
+                       //       mergePackqty.add(totalMergePackQty.text);
+                       //       totalMergePackQty.clear();
+                       //       log(_packCodesListPackInfo.toString());
+                       //       mergePack.add(_packCodesListPackInfo[0]);
+                       //       _packCodesListPackInfo.clear();
+                       //       isSerializable=false;
+                       //       savePackAndQty();
+                       //     }
+                       //
+                       //   },
+                       // )
                       ),
 
                     ],
@@ -228,14 +241,21 @@ class _RePacketUIState extends State<RePacketUI> {
             ///generate button for repacket
             Visibility(
               visible: _packCodesListPackInfo.isEmpty?false:true,
-              child: RoundedButtonThree(
-                color: Colors.indigo,
-                buttonText: "Generate",
-                onTap: (){
-                  generateRePack();
+              child:   ElevatedButton(
+                  onPressed: (){
+                    generateRePack();
+                  },
+                  child: Text("Generate")),
 
-                },
-              ),
+
+              // RoundedButtonThree(
+              //   color: Colors.indigo,
+              //   buttonText: "Generate",
+              //   onTap: (){
+              //     generateRePack();
+              //
+              //   },
+              // ),
             ),
 
             kHeightMedium,
@@ -328,7 +348,7 @@ log(_packCodesListPackInfo.toString());
                       if (value == _currentScannedCode) {
                           setState(() {
                             finalSerialId.add(key);
-                            log(finalSerialId.toString());
+                            log("serial id"+finalSerialId.toString());
                           });
                       }else{
                       }
@@ -452,20 +472,30 @@ log(_packCodesListPackInfo.toString());
     );
     log(response.statusCode.toString());
     log(response.body);
-    if (response.statusCode == 200) {
-      purchaseDetail.add(jsonDecode(response.body)['purchase_detail']);
-      purchaseOrderDetail.add(jsonDecode(response.body)['purchase_order_detail']);
-      // log("jhgjhg"+jsonDecode(response.body)['pack_type_detail_codes'].isEmpty.toString());
-      finalPackId.add(jsonDecode(response.body)['id']);
-      if(jsonDecode(response.body)['pack_type_detail_codes'].isEmpty){
-          isSerializable =false;
+    if (response.statusCode == 200||response.statusCode == 201) {
+      setState(() {
+        purchaseDetail.add(jsonDecode(response.body)['results'][0]['purchase_detail']);
+        purchaseOrderDetail.add(jsonDecode(response.body)['results'][0]['purchase_order_detail']);
+        // log("jhgjhg"+jsonDecode(response.body)['pack_type_detail_codes'].isEmpty.toString());
+        finalPackId.add(jsonDecode(response.body)['results'][0]['id']);
+        log(finalPackId.toString());
+      });
+      if(jsonDecode(response.body)['results'][0]['pack_type_detail_codes'].isNotEmpty){
+       setState(() {
+         isSerializable =true;
+       });
+       for(int i=0;i<jsonDecode(response.body)['results'][0]['pack_type_detail_codes'].length;i++){
+         setState(() {
+           serialCodesId.add( jsonDecode(response.body)['results'][0]['pack_type_detail_codes'][i]['id']);
+           serialCodesReceived.add(jsonDecode(response.body)['results'][0]['pack_type_detail_codes'][i]['code']);
+           serialCodesDict = Map.fromIterables(serialCodesId,serialCodesReceived);
+         });
+       }
       }else{
-        isSerializable=true;
-        for(int i=0;i<jsonDecode(response.body)['pack_type_detail_codes'].length;i++){
-          serialCodesId.add( jsonDecode(response.body)['pack_type_detail_codes'][i]['id']);
-    serialCodesReceived.add(jsonDecode(response.body)['pack_type_detail_codes'][i]['code']);
-    serialCodesDict = Map.fromIterables(serialCodesId,serialCodesReceived);
-        }
+       setState(() {
+         isSerializable=false;
+       });
+
       }
       log(isSerializable.toString());
       // _packCodesListPackInfo.clear();

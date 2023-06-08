@@ -15,7 +15,10 @@ import 'codeScannerToDrop.dart';
 
 class DropDetail extends StatefulWidget {
   String? id;
-   DropDetail({Key? key,this.id}) : super(key: key);
+  String? purchaseNo;
+  String? name;
+
+   DropDetail({Key? key,this.id,this.purchaseNo,this.name}) : super(key: key);
 
   @override
   _DropDetailState createState() => _DropDetailState();
@@ -40,28 +43,73 @@ class _DropDetailState extends State<DropDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(StringConst.dropDepartmentTransferDetails),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text(StringConst.dropDepartmentTransferDetails,  style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: ListView(
-        shrinkWrap: true,
-        children: [
+      body: Card(
+        margin: kMarginPaddSmall,
+        color:
+        Colors.white,
 
-          FutureBuilder<List<Results>?>(
-              future: dropOrderReceived,
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return const Center(child: CircularProgressIndicator());
-                  default:
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      return _dropOrderCards(snapshot.data);
+        elevation: kCardElevation,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0)),
+        child: Container(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left:100.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.battery_charging_full_outlined),
+                    Text("${widget.purchaseNo}"),
+                  ],
+                ),
+              ),
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.only(left:60.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Color(0xffF3F6F9),
+                      child:  Text('${widget.name!.substring(0,1).toUpperCase() }'),
+                    ),
+                    SizedBox(width: 10,),
+                    Container(
+                      width: 200,
+                      child: Text(
+                        "${widget.name}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
+
+                  ],
+                ),
+              ),
+              FutureBuilder<List<Results>?>(
+                  future: dropOrderReceived,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const Center(child: CircularProgressIndicator());
+                      default:
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return _dropOrderCards(snapshot.data);
+                        }
                     }
-                }
-              })
-        ],
+                  }),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -74,8 +122,11 @@ class _DropDetailState extends State<DropDetail> {
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return Card(
+            shadowColor: Colors.white,
             margin: kMarginPaddSmall,
-            color: Colors.white,
+            // color: data[index].picked == false
+            //     ? Colors.white
+            //     : Colors.grey,
             elevation: kCardElevation,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
@@ -83,7 +134,8 @@ class _DropDetailState extends State<DropDetail> {
               padding: kMarginPaddSmall,
               child: Column(
                 children: [
-                  // poInRowDesign('Received No :', data[index].orderNo),
+
+                  // poInRowDesign('Received No :', data[index].purchaseNo),
                   // poInRowDesign(
                   //     'Date :',
                   //     data[index]
@@ -100,18 +152,7 @@ class _DropDetailState extends State<DropDetail> {
                       Container(
                         height: 30,
                         width: 200,
-                        decoration:  BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
+                      
                         child: Center(child: Text("${data[index].batchNo}",style: TextStyle(fontWeight: FontWeight.bold),)),
                       ),
                     ],
@@ -198,7 +239,7 @@ log(response.body);
       onTap: () =>
           goToPage(context, ScanAndDrop(widget.id.toString(),_data[_index].refDepartmentTransferDetail.toString(),_data[_index].id.toString()))
       ,
-      color: Color(0xff2c51a4),
+      color: Colors.brown.shade800,
     )
     ;
   }

@@ -14,24 +14,24 @@ import 'package:indigo_paints/consts/string_const.dart';
 import 'package:indigo_paints/consts/style_const.dart';
 import 'package:indigo_paints/ui/login/login_screen.dart';
 
-
 class TransferRepackgingListUi extends StatefulWidget {
-  String id ;
-   TransferRepackgingListUi({Key? key,required this.id}) : super(key: key);
+  String id;
+
+  TransferRepackgingListUi({Key? key, required this.id}) : super(key: key);
 
   @override
-  State<TransferRepackgingListUi> createState() => _TransferRepackgingListUiState();
+  State<TransferRepackgingListUi> createState() =>
+      _TransferRepackgingListUiState();
 }
 
 class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
-
-  int page =0;
+  int page = 0;
   int limit = 10;
   bool isFirstLoadRunning = false;
   List post = [];
-  bool hasNextPage=true;
+  bool hasNextPage = true;
   bool isLoadMoreRunning = false;
-  List finalAllPacks= [];
+  List finalAllPacks = [];
   List packCodesGot = [];
   Map<String, String> serialvalueDict = {};
   List<DepartmentTransferPackingType> packCodesList = [];
@@ -41,10 +41,11 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
   List<String> _rePackCodesList = [];
   List<String> _rePackCodesID = [];
   int? totalSerialNo;
-  List code =[];
-  List<newSalePackingTypeCode> rePackCodes =[];
-  List rePackCodesToSend =[];
-  void firstLoad(){
+  List code = [];
+  List<newSalePackingTypeCode> rePackCodes = [];
+  List rePackCodesToSend = [];
+
+  void firstLoad() {
     setState(() {
       isFirstLoadRunning = true;
     });
@@ -57,7 +58,7 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
     setState(() {
       isLoadMoreRunning = true;
     });
-    page+=10;
+    page += 10;
     setState(() {
       isLoadMoreRunning = false;
     });
@@ -67,26 +68,12 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
   late ProgressDialog pd;
   late Future<List<Results>?> pickUpList;
   final TextEditingController _searchController = TextEditingController();
+
   // ScrollController scrollController = ScrollController();
-
-  String _search = '';
-
-  // searchHandling<Result>() {
-  //   log(" SEARCH ${_searchController.text}");
-  //   if (_search == "") {
-  //     pickUpList = rePackageList("");
-  //     return pickUpList;
-  //   } else {
-  //     pickUpList = rePackageList(_search);
-  //     return pickUpList;
-  //   }
-  // }
-
-  // bool loading = false;
-  // bool allLoaded = false;
 
   TextEditingController bulkPackQty = TextEditingController();
   late ScrollController controller;
+
   @override
   void initState() {
     pickUpOrders();
@@ -94,8 +81,7 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
     pd = initProgressDialog(context);
 
     super.initState();
-    log("master id:"+widget.id);
-
+    log("master id:" + widget.id);
   }
 
   @override
@@ -108,11 +94,17 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Transfer Repackaging List",style: TextStyle(fontSize: 16),),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Transfer Repackaging List",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           InkWell(
-            onTap: (){
+            onTap: () {
               // OpenDialogRepackage(context);
               generateRePackageList();
               setState(() {});
@@ -123,8 +115,10 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
                 padding: kMarginPaddMedium,
                 child: Text(
                   'Create',
-                  // StringConst.rePackageAll,
-                  style: kTextStyleSmall,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -149,9 +143,7 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
         scrollDirection: Axis.vertical,
         // controller: controller,
         child: Column(
-
           children: [
-
             // TextFormField(
             //   controller: _searchController,
             //   keyboardType: TextInputType.text,
@@ -207,17 +199,14 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
       ),
     );
   }
-  Future OpenDialogRepackage(BuildContext context) =>
-      showDialog(
+
+  Future OpenDialogRepackage(BuildContext context) => showDialog(
         barrierColor: Colors.black38,
-
         context: context,
-
         builder: (context) => Dialog(
           backgroundColor: Colors.indigo.shade50,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15)
-          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.topCenter,
@@ -234,7 +223,8 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             'Pack Quantity',
-                            style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
+                            style: kTextStyleBlack.copyWith(
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                         kHeightVeryBig,
@@ -246,7 +236,6 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
 
                           style: TextStyle(color: Colors.grey),
                           decoration: kFormFieldDecoration.copyWith(
-
                             hintText: 'Pack Qutantity',
                             prefixIcon: const Icon(
                               Icons.add_box,
@@ -257,33 +246,31 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
                         kHeightVeryBig,
                         kHeightVeryBig,
                         ElevatedButton(
-                            onPressed: (){
+                            onPressed: () {
                               generateRePackageList();
                               popAndLoadPage();
                             },
-                            child: Text("Create")
-                        ),
+                            child: Text("Create")),
                       ],
                     ),
                   ),
-
                 ),
               ),
               Positioned(
-                  top:-35,
-
+                  top: -35,
                   child: CircleAvatar(
-                    child: Icon(Icons.ac_unit_sharp,size: 40,),
+                    child: Icon(
+                      Icons.ac_unit_sharp,
+                      size: 40,
+                    ),
                     radius: 40,
-
                   )),
-
             ],
           ),
         ),
-
       );
-  Future generateRePackageList()  async {
+
+  Future generateRePackageList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // String finalUrl = prefs.getString(StringConst.subDomain).toString();
     String dropOrderID = prefs.getString(StringConst.dropOrderID).toString();
@@ -291,7 +278,8 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
     String finalUrl = prefs.getString("subDomain").toString();
 
     final response = await http.post(
-        Uri.parse('${StringConst.protocol}${finalUrl}${StringConst.bulkSaveRepackages}'),
+        Uri.parse(
+            '${StringConst.protocol}${finalUrl}${StringConst.bulkSaveRepackages}'),
         // Uri.parse('${StringConst.protocol}${finalUrl}:8081${StringConst.bulkSaveRepackages}'),
         headers: {
           'Content-type': 'application/json',
@@ -308,134 +296,123 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
     //     .dropReceivedOrders(locationCode, packCode);
 
     // pd.close();
-    log("response from server : "+response.body.toString());
+    log("response from server : " + response.body.toString());
 
-    if (response.statusCode == 401||response.statusCode == 400) {
-      displayToastSuccess(msg: jsonDecode(response.body)['msg'].toString().toUpperCase());
-
-    }
-    else {
+    if (response.statusCode == 401 || response.statusCode == 400) {
+      displayToastSuccess(
+          msg: jsonDecode(response.body)['msg'].toString().toUpperCase());
+    } else {
       if (response.statusCode == 200 || response.statusCode == 201) {
-
         displayToastSuccess(msg: 'Repacket Successful');
         Navigator.pop(context);
-
       } else {
         // displayToast(msg: StringConst.somethingWrongMsg);
       }
     }
-
   }
 
   popAndLoadPage() {
     Navigator.pop(context);
     Navigator.pop(context);
-    goToPage(context, TransferRepackgingListUi(id:widget.id));
+    goToPage(context, TransferRepackgingListUi(id: widget.id));
   }
 
   _pickOrderCards(List<Result>? data) {
-
     return data != null
         ? ListView.builder(
-        // controller: controller,
-        shrinkWrap: true,
-        itemCount: data.length,
-        // physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-
-          return Card(
-            margin: kMarginPaddSmall,
-            color: Colors.white,
-            elevation: kCardElevation,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Container(
-              padding: kMarginPaddSmall,
-              child: Column(
-                children: [
-                  Row(
+            // controller: controller,
+            shrinkWrap: true,
+            itemCount: data.length,
+            // physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Card(
+                margin: kMarginPaddSmall,
+                color: Colors.white,
+                elevation: kCardElevation,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0)),
+                child: Container(
+                  padding: kMarginPaddSmall,
+                  child: Column(
                     children: [
-                      Container(
-                        child: Text(
-                          "Repackage No:",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        height: 30,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Center(
+                      Row(
+                        children: [
+                          Container(
                             child: Text(
+                              "Repackage No:",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            height: 30,
+                            width: 200,
+
+                            child: Center(
+                                child: Text(
                               "${data[index].code}",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             )),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-
-                  kHeightMedium,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // data[index].pickVerified ||
-                            //     !data[index].isPicked ||
-                            //     data[index].status == 3
-                            //     ? displayToast(msg: "Already Verified")
-                            //     :
-                            goToPage(context,
-                                TransferScanToRePacketUI( widget.id,data[index].id.toString(),data[index].id.toString(),_rePackCodesList,packCodesList,this.serialvalueDict,newSerialvalueDict));
-                          },
-                          child: Icon(Icons.check),
-                          style: ButtonStyle(
-                            shadowColor: MaterialStateProperty.all<Color>(
-                                Colors.grey),
-                            backgroundColor:
-                            MaterialStateProperty.all<Color>(
-                                Color.fromARGB(255, 68, 110, 201)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                side: BorderSide(color: Colors.grey),
+                      kHeightMedium,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // data[index].pickVerified ||
+                                //     !data[index].isPicked ||
+                                //     data[index].status == 3
+                                //     ? displayToast(msg: "Already Verified")
+                                //     :
+                                goToPage(
+                                    context,
+                                    TransferScanToRePacketUI(
+                                        widget.id,
+                                        data[index].id.toString(),
+                                        data[index].id.toString(),
+                                        _rePackCodesList,
+                                        packCodesList,
+                                        this.serialvalueDict,
+                                        newSerialvalueDict));
+                              },
+                              child: Icon(Icons.check),
+                              style: ButtonStyle(
+                                shadowColor: MaterialStateProperty.all<Color>(
+                                    Colors.grey),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.brown.shade800),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    side: BorderSide(color: Colors.grey),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 20,
-                      ),
-
                     ],
                   ),
-                ],
-              ),
-            ),
-          );
-        })
+                ),
+              );
+            })
         : Center(
-      child: ElevatedButton(onPressed: (){},
-          child: Text("No data")),
-    );
+            child: ElevatedButton(onPressed: () {}, child: Text("No data")),
+          );
   }
+
   void savePackCodeList(List<DepartmentTransferPackingType> packingType) {
     log(packingType.length.toString());
     for (var i = 0; i < packCodesList.length; i++) {
@@ -448,8 +425,9 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
 
     totalSerialNo = _packCodesList.length;
     log(_packCodesID.toString());
-    log("pack dict" +serialvalueDict.toString());
+    log("pack dict" + serialvalueDict.toString());
   }
+
   void saveRePackCodeList(List<newSalePackingTypeCode> packingType) {
     log(packingType.length.toString());
     for (var i = 0; i < rePackCodes.length; i++) {
@@ -458,11 +436,12 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
     }
     newSerialvalueDict.isNotEmpty
         ? {}
-        : newSerialvalueDict = Map.fromIterables(_rePackCodesID, _rePackCodesList);
+        : newSerialvalueDict =
+            Map.fromIterables(_rePackCodesID, _rePackCodesList);
 
     totalSerialNo = _packCodesList.length;
-    log("Re Pack Id"+_rePackCodesID.toString());
-    log("Re Pack Dict"+newSerialvalueDict.toString());
+    log("Re Pack Id" + _rePackCodesID.toString());
+    log("Re Pack Dict" + newSerialvalueDict.toString());
   }
 
   Future<List<Results>?> pickUpOrders() async {
@@ -470,7 +449,8 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
     String finalUrl = prefs.getString("subDomain").toString();
 
     final response = await http.get(
-        Uri.parse('https://${finalUrl}${StringConst.transferRepackageListGetInfo}?id=&department_transfer_master=${widget.id}'),
+        Uri.parse(
+            'https://${finalUrl}${StringConst.transferRepackageListGetInfo}?id=&department_transfer_master=${widget.id}'),
         // Uri.parse('http://${finalUrl}:8081${StringConst.transferRepackageListGetInfo}?id=&department_transfer_master=${widget.id}'),
         headers: {
           'Content-type': 'application/json',
@@ -490,28 +470,27 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
         // printResponse(response);
         final data = json.decode(response.body);
 
-        for(int i=0;i<data['results'].length;i++){
-
-            data['results'][i]['department_transfer_packing_types'].forEach(
-                  (element) {
-                packCodesList.add(
-                  DepartmentTransferPackingType.fromJson(element),
-                );
-              },
-            );
-
-
+        for (int i = 0; i < data['results'].length; i++) {
+          data['results'][i]['department_transfer_packing_types'].forEach(
+            (element) {
+              packCodesList.add(
+                DepartmentTransferPackingType.fromJson(element),
+              );
+            },
+          );
         }
 
-        for(int i=0;i<packCodesList.length;i++){
-          if(packCodesGot.contains(packCodesList[i].code)){}
-          else{
+        for (int i = 0; i < packCodesList.length; i++) {
+          if (packCodesGot.contains(packCodesList[i].code)) {
+          } else {
             packCodesGot.add(packCodesList[i].code);
-            log("fl"+packCodesGot.toString());
+            log("fl" + packCodesGot.toString());
           }
         }
         savePackCodeList(packCodesList);
-        return RepackagingListModel.fromJson(jsonDecode(response.body.toString())).results;
+        return RepackagingListModel.fromJson(
+                jsonDecode(response.body.toString()))
+            .results;
       } else {
         displayToast(msg: StringConst.somethingWrongMsg);
       }
@@ -519,13 +498,15 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
 
     return null;
   }
+
   Future<List<Result>?> rePackageList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String finalUrl = prefs.getString("subDomain").toString();
 
     final response = await http.get(
         // Uri.parse('http://${finalUrl}:8081${StringConst.transferRepackageListings}?id=&department_transfer_master=${widget.id}'),
-        Uri.parse('https://${finalUrl}${StringConst.transferRepackageListings}?id=&department_transfer_master=${widget.id}'),
+        Uri.parse(
+            'https://${finalUrl}${StringConst.transferRepackageListings}?id=&department_transfer_master=${widget.id}'),
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
@@ -544,20 +525,21 @@ class _TransferRepackgingListUiState extends State<TransferRepackgingListUi> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // printResponse(response);
         final data = json.decode(response.body);
-        for(int i=0;i<data['results'].length;i++){
+        for (int i = 0; i < data['results'].length; i++) {
           data['results'][i]['sale_packing_type_code'].forEach(
-                (element) {
+            (element) {
               rePackCodes.add(
                 newSalePackingTypeCode.fromJson(element),
               );
             },
           );
         }
-        log("Re Packs"+rePackCodes.toString());
+        log("Re Packs" + rePackCodes.toString());
         saveRePackCodeList(rePackCodes);
 
-
-        return NewRepackageListings.fromJson(jsonDecode(response.body.toString())).results;
+        return NewRepackageListings.fromJson(
+                jsonDecode(response.body.toString()))
+            .results;
       } else {
         displayToast(msg: StringConst.somethingWrongMsg);
       }

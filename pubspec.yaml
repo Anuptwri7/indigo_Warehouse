@@ -37,14 +37,17 @@ dependencies:
   fluttertoast: ^8.0.8
   google_fonts: ^3.0.1
   http: ^0.13.4
+  audioplayers:
   lite_rolling_switch: ^0.1.1
   provider: ^6.0.3
   readmore: ^2.1.0
   shared_preferences: ^2.0.12
   sn_progress_dialog: ^1.0.8
-  search_choices: ^2.0.20
+  search_choices: ^2.2.5
   shimmer: ^2.0.0
   web_socket_channel: ^2.2.0
+  assets_audio_player: ^3.0.6
+
 #  zebrautility: ^0.0.38
 dev_dependencies:
   flutter_launcher_icons: "^0.9.2"
@@ -75,10 +78,26 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+
+    - assets/images/audit.png
+    - assets/images/chalan.png
+    - assets/images/drop.png
+    - assets/images/locationshift.png
+    - assets/images/openstock.png
+    - assets/images/packinfo.png
+    - assets/images/PickUp.png
+    - assets/images/receive.png
+    - assets/images/sale.png
+    - assets/images/transfer.png
+    - assets/images/picked.png
+    - assets/images/notific.mp3
+    - assets/images/notificationIMS.mp3
+    - assets/images/notPicked.png
     - assets/images/
-    - assets/images/logo.png
     - assets/logo/
     - assets/
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

@@ -97,8 +97,10 @@ class _ScanAndDropState extends State<ScanAndDrop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Drop Branch Transfer'),
-        backgroundColor: Color(0xff2c51a4),
+      appBar: AppBar(title: const Text('Drop Branch Transfer' , style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -116,18 +118,7 @@ class _ScanAndDropState extends State<ScanAndDrop> {
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${packSavedCodes.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -142,18 +133,7 @@ class _ScanAndDropState extends State<ScanAndDrop> {
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${_scanPackNo.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -168,7 +148,7 @@ class _ScanAndDropState extends State<ScanAndDrop> {
               child: Text('Pack Codes', style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),),
             ),
             Card(
-              color: Color(0xffeff3ff),
+              color: Colors.white,
               elevation: 8.0,
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -191,7 +171,7 @@ class _ScanAndDropState extends State<ScanAndDrop> {
                 _scanLocationNo.isNotEmpty && _scanPackNo.isNotEmpty
                     ? dropCurrentItem(_scanLocationNo, _scanPackNo)
                     : displayToast(msg:  'Please Scan Codes and Try Again'),
-                color: Color(0xff2c51a4),
+                color: Color(0xff2424143),
               ),
             ),
           ],
@@ -341,7 +321,7 @@ class _ScanAndDropState extends State<ScanAndDrop> {
 
   _displayLocationSerialNo() {
     return Card(
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
       child: Padding(
@@ -367,6 +347,12 @@ class _ScanAndDropState extends State<ScanAndDrop> {
                         fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                 ),
+                Expanded(
+                  flex: 2,
+                  child: Icon(
+                      Icons.delete
+
+                  ),),
               ],
             ),
             kHeightSmall,
@@ -378,7 +364,7 @@ class _ScanAndDropState extends State<ScanAndDrop> {
 
   _displayItemsSerialNo() {
     return Card(
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
       child: Padding(

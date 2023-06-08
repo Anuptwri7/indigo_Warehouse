@@ -1,12 +1,16 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:indigo_paints/ui/RePacketing/rePacketUi.dart';
 import 'package:indigo_paints/ui/Repackagaing/chalanRePackaging/chalanRePackListUI.dart';
 import 'package:indigo_paints/ui/ppb/Measure/qtyDrop.dart';
 import 'package:indigo_paints/ui/ppb/Task%20Lot%20Output/taskLotOutputDrop.dart';
 import 'package:indigo_paints/ui/ppb/lot%20pickup/taskMaster.dart';
 import 'package:indigo_paints/ui/ppb/lotPickupReturn/lotPickupReturnUi.dart';
-import 'package:indigo_paints/ui/ppb/pickupDrop/pickupDrop.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:indigo_paints/SerialInfo/serialInfoPage.dart';
@@ -22,19 +26,19 @@ import '../main.dart';
 import 'Notification/controller/notificationController.dart';
 import 'RePacketing/dropRepacket.dart';
 import 'Repackagaing/saleRepackaging/rePackListUI.dart';
-import 'Repackagaing/saleRepackaging/repackagingList.dart';
 import 'TransferRepackaging/rePackListUI.dart';
 import 'department transfer/drop/master.dart';
 import 'department transfer/pickup/pickupUi.dart';
 import 'department transfer/receive/master.dart';
 import 'drop/Bulk Drop/ui/bulkDropListPage.dart';
 import 'drop/ui/drop_ order_list.dart';
-
 import 'location Shift/locationShiftPage.dart';
-import 'package:http/http.dart' as http;
-import 'login/login_screen.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 
 class HomePage extends StatefulWidget {
+  List? permissions=[];
+  HomePage(this.permissions);
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -42,9 +46,61 @@ class _HomePageState extends State<HomePage> {
   String ? name;
   int numNotific = 10;
 
+  String userName='';
+
+  getUserDetail() async{
+    SharedPreferences prefs =await SharedPreferences.getInstance();
+
+  setState(() {
+    userName=prefs.get("user_name").toString();
+  });
+  }
+
+      connectSocket() async{
+        log('im here');
+       SharedPreferences preferences = await SharedPreferences.getInstance();
+          // final wsUrl = Uri.parse('wss://api-demo.ybs.com.np/ws/notification?Token=${preferences.get("access_token")}');
+          final wsUrl = Uri.parse('wss://api-demo.sooritechnology.com.np/ws/notification?Token=${preferences.get("access_token")}');
+        final channel = IOWebSocketChannel.connect(wsUrl);
+
+          channel.stream.listen((message) async{
+
+            log("Response from socket:"+message);
+
+            play(message);
+            AssetsAudioPlayer.newPlayer().open(
+              Audio('assets/images/notificationIMS.mp3'),
+            );
+
+          });
+        if(channel.ready==true){
+          await Future.delayed(Duration(seconds: 1));
+          log("connected");
+        }else{
+          log("disconnected");
+        }
+
+      }
+  final player = AudioPlayer();
+
+      play(msg) async{
+        log("im here");
+        await AssetsAudioPlayer.newPlayer().open(
+          Audio('assets/images/notificationIMS.mp3'),
+        );
+        await  Fluttertoast.showToast(msg: jsonDecode(msg)['msg'],
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.brown.shade800
+        );
+      }
+
+  late AssetsAudioPlayer _assetsAudioPlayer;
   @override
   void initState() {
     super.initState();
+    connectSocket();
+    getUserDetail();
+    // log(widget.permissions.toString());
     final data = Provider.of<NotificationClass>(context, listen: false);
     data.fetchCount(context);
 
@@ -55,66 +111,26 @@ class _HomePageState extends State<HomePage> {
     final count = Provider.of<NotificationClass>(context);
     return  Scaffold(
       appBar:AppBar(
+        leading: Icon(Icons.person,color: Colors.brown.shade800,),
         actions: [
-          // const Icon(
-          //   Icons.search,
-          //   color: Color(0xff2c51a4),
-          // ),
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.notifications,
-                  color: Colors.grey,
-                  size: 30,
-                ),
-                onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => const NotificationPage()));
-                },
-              ),
-              if (count.notificationCountModel?.unreadCount != null)
-                Positioned(
-                  right: 11,
-                  top: 11,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 14,
-                      minHeight: 14,
-                    ),
-                    child: Text(
-                      "${(count.notificationCountModel?.unreadCount)}",
-                      //! > (numNotific) ?"9+":count.notificationCountModel?.unreadCount
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              else
-                Container(),
-            ],
-          ),
-
-          // const SizedBox(
-          //   width: 10,
-          // ),
           InkWell(
-            onTap: () {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => const NotificationPage()));
-            },
+            onTap: () {   },
+            child: Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.notification_add,
+                    color:Color(0xffBF1E2E),
+                    size: 30,
+                  ),
+                  onPressed: ()async{
+                  },
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {   },
             child: Stack(
               children: [
 
@@ -122,13 +138,12 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   icon: const Icon(
                     Icons.logout,
-                    color: Colors.grey,
+                    color:Color(0xffBF1E2E),
                     size: 30,
                   ),
                   onPressed: ()async{
                     final SharedPreferences sharedPreferences =
                     await SharedPreferences.getInstance();
-
                     sharedPreferences.clear();
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyApp()));
                   },
@@ -144,10 +159,9 @@ class _HomePageState extends State<HomePage> {
 
         title: Row(
           children:  [
-
             Text(
-              "Indigo Warehouse",
-              style: TextStyle(color: Colors.blueGrey, fontSize: 15,fontWeight: FontWeight.bold),
+              userName.toUpperCase(),
+              style: TextStyle(color: Colors.brown.shade800, fontSize: 15,fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -159,7 +173,26 @@ class _HomePageState extends State<HomePage> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-
+              Text(
+                "Welcome To",
+                style: TextStyle(fontSize: 22,color: Colors.black,fontWeight: FontWeight.bold),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left:85.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "${StringConst.name}",
+                      style: TextStyle(fontSize: 22,color: Color(0xffBF1E2E),fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      " Warehouse",
+                      style: TextStyle(fontSize: 22,color: Colors.black,fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              kHeightVeryBig,
               Padding(
                 padding: const EdgeInsets.only(top:10.0,left: 20,right:20 ),
                 child: SingleChildScrollView(
@@ -167,81 +200,86 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     // height: 350,
                     // width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      boxShadow:[
-                        BoxShadow(
-                          color: Color(0x155665df),
-                          spreadRadius: 5,
-                          blurRadius: 17,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                    // decoration: BoxDecoration(
+                    //   boxShadow:[
+                    //     BoxShadow(
+                    //       color: Color(0x155665df),
+                    //       spreadRadius: 5,
+                    //       blurRadius: 17,
+                    //       offset: Offset(0, 3),
+                    //     ),
+                    //   ],
+                    //   color: Colors.white,
+                    //   borderRadius: BorderRadius.circular(10),
+                    // ),
                     child: ListView(
                       scrollDirection: Axis.vertical,
                       physics: ScrollPhysics(),
                       shrinkWrap: true,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesign(Icons.arrow_drop_up, StringConst.poIn,
+                            _poButtonDesign(Icons.arrow_drop_up, StringConst.poIn,'assets/images/receive.png',widget.permissions!.contains('receive_purchase_order')?true:false,
                                 goToPage: () => goToPage(context, PendingOrderInList())),
                             kHeightVeryBig,
-                            _poButtonDesign(Icons.arrow_drop_down, StringConst.poDrop,
-                                goToPage: () => (OpenDialogCustomer(context))),
+                            _poButtonDesign(Icons.arrow_drop_down, StringConst.poDrop,'assets/images/drop.png',widget.permissions!.contains('drop_packet')?true:false,
+                                goToPage: () => goToPage(context, BulkPODrop())),
                           ],
                         ),
                         kHeightVeryBig,
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesign(Icons.arrow_drop_up, StringConst.poOut,
+                            _poButtonDesign(Icons.arrow_drop_up, StringConst.poOut,'assets/images/PickUp.png',widget.permissions!.contains('pickup_customer_order')||widget.permissions!.contains("pickup_verify_customer_order")?true:false,
                                 goToPage: () => goToPage(context, PickOrder())),
                             kHeightVeryBig,
-                            _poButtonDesign(Icons.arrow_drop_down, StringConst.poAudit,
+                            _poButtonDesign(Icons.arrow_drop_down, StringConst.poAudit,'assets/images/audit.png',widget.permissions!.contains('view_audit_report')?true:false,
                                 goToPage: () => goToPage(context, AuditList())),
                           ],
                         ),
                         kHeightVeryBig,
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesign(Icons.arrow_drop_up, StringConst.locationShifting,
+                            _poButtonDesign(Icons.arrow_drop_up, StringConst.locationShifting,'assets/images/locationshift.png',widget.permissions!.contains('view_audit_report')?true:false,
                                 goToPage: () => goToPage(context, LocationShifting())),
                             kHeightVeryBig,
-                            _poButtonDesign(Icons.arrow_drop_down, StringConst.info,
+                            _poButtonDesign(Icons.arrow_drop_down, StringConst.info,'assets/images/packinfo.png', widget.permissions!.contains('view_packet_info')?true:false,
                                 goToPage: () => (OpenDialogInfo(context))),
                           ],
                         ),
                         kHeightVeryBig,
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesign(Icons.arrow_drop_down, StringConst.RePacketing,
+
+                            _poButtonDesign(Icons.arrow_drop_down, StringConst.RePacketing,'assets/images/openstock.png',true,
                                 goToPage: () => OpenDialogRePacketting(context)
                               // goToPage(context, RePacketUI())
                             ),
                             kHeightVeryBig,
-                            _poButtonDesign(Icons.arrow_drop_up, StringConst.department,
+                            _poButtonDesign(Icons.arrow_drop_up, StringConst.department,'assets/images/openstock.png',true,
                               goToPage: () => OpenDialogDepartmentTransfer(context)),
                           ],
                         ),
                         kHeightVeryBig,
-                        _poButtonDesign(Icons.arrow_drop_up, StringConst.ppb,
-                            goToPage: () => openLotDialog(context)),
-
-
-                        kHeightVeryBig,
-                        _poButtonDesign(Icons.arrow_drop_up, StringConst.repackage,
-                            goToPage: () => OpenDialogRePackaging(context)),
-
+                        Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _poButtonDesign(Icons.arrow_drop_down, StringConst.ppb,'assets/images/openstock.png',true,
+                                goToPage: () => openLotDialog(context)
+                              // goToPage(context, RePacketUI())
+                            ),
+                            kHeightVeryBig,
+                            _poButtonDesign(Icons.arrow_drop_up, StringConst.repackage,'assets/images/openstock.png',true,
+                                goToPage: () => OpenDialogRePackaging(context)),
+                          ],
+                        ),
                         // kHeightVeryBig,
 
                         kHeightVeryBig,
-                        _poButtonDesign(Icons.arrow_drop_up, StringConst.openingStock,
+                        _poButtonDesign(Icons.arrow_drop_up, StringConst.openingStock,'assets/images/openstock.png',true,
                             goToPage: () => goToPage(context, OpeningStockList())),
                       ],
                     ),
@@ -262,7 +300,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
 
         builder: (context) => Dialog(
-          backgroundColor: Colors.indigo.shade50,
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15)
           ),
@@ -282,12 +320,12 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesignDailog(Icons.arrow_circle_down_sharp, "FG Drop",
+                            _poButtonDesignDailog(Icons.arrow_circle_down_sharp, "FG Drop",widget.permissions!.contains("drop_task_output")?true:false,
                                 goToPage: () =>
                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>LotOutputMasterPage()))
                             ),
                             kHeightVeryBig,
-                            _poButtonDesignDailog(Icons.arrow_drop_down,"Lot Pickup",
+                            _poButtonDesignDailog(Icons.arrow_drop_down,"Lot Pickup",widget.permissions!.contains("pickup_task_lot")?true:false,
                                 goToPage: () =>
                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskMasterPage()))
                             ),
@@ -300,10 +338,10 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesignDailog(Icons.arrow_drop_down,"Measure",
+                            _poButtonDesignDailog(Icons.arrow_drop_down,"Measure",true,
                                 goToPage: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>QtyDropMaster()))),
                             kHeightVeryBig,
-                            _poButtonDesignDailog(Icons.arrow_drop_down,"Pickup Return",
+                            _poButtonDesignDailog(Icons.arrow_drop_down,"Pickup Return",true,
                                 goToPage: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>LotPickupReturnMaster()))),
                             kHeightVeryBig,
                             kHeightVeryBig,
@@ -314,23 +352,7 @@ class _HomePageState extends State<HomePage> {
                         //     goToPage: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>PickupDrop()))),
                         kHeightVeryBig,
 
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            ListView(
-                              // controller: scrollController,
-                              scrollDirection: Axis.vertical,
-                              physics: ScrollPhysics(),
-                              shrinkWrap: true,
-                              children: [
 
-                              ],
-                            ),
-
-
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -338,54 +360,52 @@ class _HomePageState extends State<HomePage> {
               ),
               Positioned(
                   top:-35,
+
+
                   child: CircleAvatar(
-                    child: Icon(Icons.ac_unit_sharp,size: 40,),
+                    backgroundColor: Colors.white,
+                    child: Image.asset("assets/images/soorilogo.png"),
                     radius: 40,
+
                   )),
             ],
           ),
         ),
       );
 
-  _poButtonDesign(IconData buttonIcon, String buttonString,
+  _poButtonDesign(IconData buttonIcon, String buttonString,String image,bool visible,
       {required VoidCallback goToPage}) {
-    return Card(
-      elevation: kCardElevation,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      child: InkWell(
-        focusColor: Colors.white,
-        onTap: goToPage,
-        borderRadius: BorderRadius.circular(12.0),
-        child: Container(
-          height: 60,
-          width: 150,
-          // color: Colors.blueGrey[700],
-          // color: Colors.white10,
-          decoration: BoxDecoration(
-            color: const Color(0xffeff3ff),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0xffeff3ff),
-                offset: Offset(-2, -2),
-                spreadRadius: 1,
-                blurRadius: 10,
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Icon(
-                buttonIcon,
-                size: 32,
-                color: Colors.black,
-              ),
-              Text(
-                buttonString,
-                style: kTextStyleBlack,
-              ),
-            ],
+    return Visibility(
+      visible: visible,
+      child: Card(
+        elevation: kCardElevation,
+        shadowColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        child: InkWell(
+          focusColor: Colors.white,
+          onTap: goToPage,
+          borderRadius: BorderRadius.circular(12.0),
+          child: Container(
+            height: 60,
+            width: 150,
+            // color: Colors.blueGrey[700],
+            // color: Colors.white10,
+
+            child: Column(
+              children: [
+                SizedBox(height: 10,),
+                Image.asset(
+                    image
+                ),
+                SizedBox(width: 10,),
+                Text(
+                  buttonString,
+                  style: kTextStyleBlackForHomePage,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -400,7 +420,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
 
         builder: (context) => Dialog(
-          backgroundColor: Colors.indigo.shade50,
+         backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15)
           ),
@@ -420,10 +440,10 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.saleRePackaging,
+                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.saleRePackaging,true,
                                 goToPage: () => goToPage(context, RePackListUi())),
                             kHeightVeryBig,
-                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.chalanRePackaging,
+                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.chalanRePackaging,true,
                                 goToPage: () => goToPage(context, ChalanRePackListUi())),
                             kHeightVeryBig,
                             kHeightVeryBig,
@@ -432,7 +452,7 @@ class _HomePageState extends State<HomePage> {
                             kHeightVeryBig,
                           ],
                         ),
-                        _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.transferReapckaging,
+                        _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.transferReapckaging,true,
                             goToPage: () => goToPage(context, TransferRePackListUi())),
                         kHeightVeryBig,
 
@@ -442,11 +462,13 @@ class _HomePageState extends State<HomePage> {
 
                 ),
               ),
-              Positioned(
+               Positioned(
                   top:-35,
 
+
                   child: CircleAvatar(
-                    child: Icon(Icons.ac_unit_sharp,size: 40,),
+                    backgroundColor: Colors.white,
+                    child: Image.asset("assets/images/soorilogo.png"),
                     radius: 40,
 
                   )),
@@ -463,7 +485,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
 
         builder: (context) => Dialog(
-          backgroundColor: Colors.indigo.shade50,
+         backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15)
           ),
@@ -483,10 +505,10 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.dropDepartment,
+                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.dropDepartment,widget.permissions!.contains("drop_department_transfer")?true:false,
                                 goToPage: () => goToPage(context, DropDepartmentTransferUI())),
                             kHeightVeryBig,
-                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.pickDepartment,
+                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.pickDepartment,widget.permissions!.contains("pickup_department_transfer")?true:false,
                                 goToPage: () => goToPage(context, DepartmentTransferPickOrder())),
                             kHeightVeryBig,
 
@@ -495,7 +517,7 @@ class _HomePageState extends State<HomePage> {
                             kHeightVeryBig,
                           ],
                         ),
-                        _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.receiveDepartment,
+                        _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.receiveDepartment,widget.permissions!.contains("receive_department_transfer")?true:false,
                             goToPage: () => goToPage(context, DepartmentTransferReceive())),
 
 
@@ -505,11 +527,13 @@ class _HomePageState extends State<HomePage> {
 
                 ),
               ),
-              Positioned(
+               Positioned(
                   top:-35,
 
+
                   child: CircleAvatar(
-                    child: Icon(Icons.ac_unit_sharp,size: 40,),
+                    backgroundColor: Colors.white,
+                    child: Image.asset("assets/images/soorilogo.png"),
                     radius: 40,
 
                   )),
@@ -526,7 +550,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
 
         builder: (context) => Dialog(
-          backgroundColor: Colors.indigo.shade50,
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15)
           ),
@@ -546,10 +570,10 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.dropRepacket,
+                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.dropRepacket,true,
                                 goToPage: () => goToPage(context, DropRepacket())),
                             kHeightVeryBig,
-                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.RePacketing,
+                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.RePacketing,true,
                                 goToPage: () => goToPage(context, RePacketUI())),
                             kHeightVeryBig,
                             kHeightVeryBig,
@@ -569,8 +593,10 @@ class _HomePageState extends State<HomePage> {
               Positioned(
                   top:-35,
 
+
                   child: CircleAvatar(
-                    child: Icon(Icons.ac_unit_sharp,size: 40,),
+                    backgroundColor: Colors.white,
+                    child: Image.asset("assets/images/soorilogo.png"),
                     radius: 40,
 
                   )),
@@ -581,47 +607,39 @@ class _HomePageState extends State<HomePage> {
 
       );
 
-  _poButtonDesignDailog(IconData buttonIcon, String buttonString,
+  _poButtonDesignDailog(IconData buttonIcon, String buttonString,bool visible,
       {required VoidCallback goToPage}) {
-    return Card(
-      elevation: kCardElevation,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      child: InkWell(
-        focusColor: Colors.white,
-        onTap: goToPage,
-        borderRadius: BorderRadius.circular(12.0),
-        child: Container(
-          height: 60,
-          width: 120,
-          // color: Colors.blueGrey[700],
-          // color: Colors.white10,
-          decoration: BoxDecoration(
-            color: const Color(0xffeff3ff),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0xffeff3ff),
-                offset: Offset(-2, -2),
-                spreadRadius: 1,
-                blurRadius: 10,
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              SizedBox(height: 10,),
-              Icon(
-                buttonIcon,
-                size: 20,
-                color: Colors.black,
-              ),
-              // SizedBox(height: 5,),
-              Text(
-                buttonString,
-                style: kTextStyleBlack,
-              ),
-            ],
+    return Visibility(
+      visible: visible,
+      child: Card(
+        elevation: kCardElevation,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        child: InkWell(
+          focusColor: Colors.white,
+          onTap: goToPage,
+          borderRadius: BorderRadius.circular(12.0),
+          child: Container(
+            height: 60,
+            width: 120,
+            // color: Colors.blueGrey[700],
+            // color: Colors.white10,
+
+            child: Column(
+              children: [
+                SizedBox(height: 10,),
+                Icon(
+                  buttonIcon,
+                  size: 20,
+                  color: Colors.black,
+                ),
+                // SizedBox(height: 5,),
+                Text(
+                  buttonString,
+                  style: kTextStyleBlack,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -635,7 +653,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
 
         builder: (context) => Dialog(
-          backgroundColor: Colors.indigo.shade50,
+         backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15)
           ),
@@ -655,10 +673,10 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesignDailog(Icons.arrow_circle_down_sharp, StringConst.bulkDrop,
+                            _poButtonDesignDailog(Icons.arrow_circle_down_sharp, StringConst.bulkDrop,true,
                                 goToPage: () => goToPage(context, BulkPODrop())),
                             kHeightVeryBig,
-                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.singleDrop,
+                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.singleDrop,true,
                                 goToPage: () => goToPage(context, PODrop())),
                             kHeightVeryBig,
                             kHeightVeryBig,
@@ -690,11 +708,13 @@ class _HomePageState extends State<HomePage> {
 
                 ),
               ),
-              Positioned(
+               Positioned(
                   top:-35,
 
+
                   child: CircleAvatar(
-                    child: Icon(Icons.ac_unit_sharp,size: 40,),
+                    backgroundColor: Colors.white,
+                    child: Image.asset("assets/images/soorilogo.png"),
                     radius: 40,
 
                   )),
@@ -711,7 +731,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
 
         builder: (context) => Dialog(
-          backgroundColor: Colors.indigo.shade50,
+          // backgroundColor: Colors.indigo.shade50,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15)
           ),
@@ -731,33 +751,17 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _poButtonDesignDailog(Icons.arrow_circle_down_sharp, StringConst.getPackInfo,
+                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.getPackInfo,true,
                                 goToPage: () => goToPage(context, PackInfo())),
                             kHeightVeryBig,
-                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.serialInfo,
+                            _poButtonDesignDailog(Icons.arrow_drop_down, StringConst.serialInfo,true,
                                 goToPage: () => goToPage(context, SerialInfoPage())),
                             kHeightVeryBig,
                             kHeightVeryBig,
                           ],
                         ),
 
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            ListView(
-                              // controller: scrollController,
-                              scrollDirection: Axis.vertical,
-                              physics: ScrollPhysics(),
-                              shrinkWrap: true,
-                              children: [
 
-                              ],
-                            ),
-
-
-                          ],
-                        ),
 
 
                       ],
@@ -770,8 +774,9 @@ class _HomePageState extends State<HomePage> {
                   top:-35,
 
                   child: CircleAvatar(
-                    child: Icon(Icons.ac_unit_sharp,size: 40,),
-                    radius: 40,
+                    backgroundColor: Colors.white,
+                    child: Image.asset("assets/images/soorilogo.png"),
+                    radius: 45,
 
                   )),
 

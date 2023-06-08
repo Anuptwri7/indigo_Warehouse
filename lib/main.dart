@@ -38,7 +38,6 @@ void main() async {
     providers: [
       ChangeNotifierProvider<NotificationClass>(
           create: (_) => NotificationClass()),
-
     ],
     child: MyApp(),
   ));
@@ -113,7 +112,7 @@ class _CheckUserLoginState extends State<CheckUserLogin>
         _logedIn = true;
       }
       if (_logedIn) {
-        replacePage(HomePage(), context);
+        // replacePage(HomePage(), context);
       } else {
         replacePage(LoginScreen(), context);
       }

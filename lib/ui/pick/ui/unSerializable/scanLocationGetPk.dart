@@ -110,8 +110,11 @@ class _ScanLocationGetPkForUnSerializableState
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Scan location'),
-          backgroundColor: Color(0xff2c51a4),
+          title: Text('Scan location',
+            style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -123,7 +126,7 @@ class _ScanLocationGetPkForUnSerializableState
                 child: Card(
                   margin: kMarginPaddSmall,
                   // color: const Color(0xffeff3ff),
-                  color: Color.fromARGB(255, 204, 212, 241),
+                  color: Colors.brown.shade800,
 
                   elevation: kCardElevation,
                   shape: RoundedRectangleBorder(
@@ -145,7 +148,7 @@ class _ScanLocationGetPkForUnSerializableState
                                     child: Text(
                                       "Locations",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,color: Colors.white),
                                     ),
                                   ),
                                   Container(
@@ -195,7 +198,7 @@ class _ScanLocationGetPkForUnSerializableState
                               children: [
                                 Text(
                                   "Remaining Qty",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                                 ),
                                 Container(
                                   width: MediaQuery.of(context).size.width/4,
@@ -256,18 +259,19 @@ class _ScanLocationGetPkForUnSerializableState
                   height: 100,
                   width: 250,
                   decoration: BoxDecoration(
-                      color: Colors.green[50],
+                      color: Colors.grey,
                       borderRadius: BorderRadius.circular(20)),
                   child: Center(
                       child: _currentScannedLocation.isEmpty
                           ? Text(
                         "Please Scan location",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20,color: Colors.white),
                       )
                           : Text(
                         "Please Scan location",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20,color: Colors.white),
                       )),
+
                 ),
               ),
             ],
@@ -363,11 +367,7 @@ class _ScanLocationGetPkForUnSerializableState
                           Container(
                             height: 30,
                             width: 150,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 218, 225, 247),
-                              // color: const Color(0xffeff3ff),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+
                             child: Center(
                                 child: Text(
                                   "${data[index].code}",
@@ -389,10 +389,7 @@ class _ScanLocationGetPkForUnSerializableState
                           Container(
                             height: 30,
                             width: 200,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 218, 225, 247),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+
                             child: Center(
                                 child: Text(
                                   "${data[index].remainingQty}",

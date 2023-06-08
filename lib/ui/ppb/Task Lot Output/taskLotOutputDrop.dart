@@ -101,8 +101,10 @@ class _LotOutputMasterPageState extends State<LotOutputMasterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("FG Drop List"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("FG Drop List", style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -118,8 +120,8 @@ class _LotOutputMasterPageState extends State<LotOutputMasterPage> {
 
                   Container(
                     height: 40,
-                    width: MediaQuery.of(context).size.width/3.4,
-                    margin: const EdgeInsets.only(top:10,left: 5,right: 5),
+                    width: MediaQuery.of(context).size.width/2,
+                    margin: const EdgeInsets.only(top:10,left: 5,right: 10),
 
                     //margin: EdgeInsets.only(left:10,right:60),
                     decoration: BoxDecoration(
@@ -135,39 +137,43 @@ class _LotOutputMasterPageState extends State<LotOutputMasterPage> {
                           )
                         ]),
                     padding: const EdgeInsets.only(left: 10, right: 0),
-                    child: DropdownButton<String>(
-                      // value: dropdownValueDate,
-                      hint: Text(dropdownValueDate),
-                      // icon: const Icon(Icons.arrow_downward,color: Color,),
-                      elevation: 16,
-                      style: const TextStyle(color: Colors.grey),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.white,
-                      ),
-                      onChanged: (String? value) {
-                        // This is called when the user selects an item.
-                        setState(() {
-                          dropdownValueDate = value!;
-                          log(value);
-                          value=="Today"?StartdateController.text=DateTime.now().year.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().day.toString()
-                              :value=="Yesterday"?StartdateController.text=DateTime.now().subtract(Duration(days:1)).year.toString()+'-'+DateTime.now().subtract(Duration(days:1)).month.toString()+'-'+DateTime.now().subtract(Duration(days:1)).day.toString()
-                              :value=="Last Week"?StartdateController.text=DateTime.now().subtract(Duration(days:7)).year.toString()+'-'+DateTime.now().subtract(Duration(days:7)).month.toString()+'-'+DateTime.now().subtract(Duration(days:7)).day.toString():""
-                          ;
-                          value=="Today"?EnddateController.text=DateTime.now().year.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().day.toString()
-                              :value=="Yesterday"?EnddateController.text=DateTime.now().subtract(Duration(days:1)).year.toString()+'-'+DateTime.now().subtract(Duration(days:1)).month.toString()+'-'+DateTime.now().subtract(Duration(days:1)).day.toString()
-                              :value=="Last Week"?EnddateController.text=DateTime.now().year.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().day.toString():""
-                          ;
-                          log(StartdateController.text);
-                          log(EnddateController.text);
-                        });
-                      },
-                      items: listDate.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                    child: Row(
+                      children: [
+                        DropdownButton<String>(
+                          // value: dropdownValueDate,
+                          hint: Text(dropdownValueDate),
+                          // icon: const Icon(Icons.arrow_downward,color: Color,),
+                          elevation: 16,
+                          style: const TextStyle(color: Colors.grey),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.white,
+                          ),
+                          onChanged: (String? value) {
+                            // This is called when the user selects an item.
+                            setState(() {
+                              dropdownValueDate = value!;
+                              log(value);
+                              value=="Today"?StartdateController.text=DateTime.now().year.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().day.toString()
+                                  :value=="Yesterday"?StartdateController.text=DateTime.now().subtract(Duration(days:1)).year.toString()+'-'+DateTime.now().subtract(Duration(days:1)).month.toString()+'-'+DateTime.now().subtract(Duration(days:1)).day.toString()
+                                  :value=="Last Week"?StartdateController.text=DateTime.now().subtract(Duration(days:7)).year.toString()+'-'+DateTime.now().subtract(Duration(days:7)).month.toString()+'-'+DateTime.now().subtract(Duration(days:7)).day.toString():""
+                              ;
+                              value=="Today"?EnddateController.text=DateTime.now().year.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().day.toString()
+                                  :value=="Yesterday"?EnddateController.text=DateTime.now().subtract(Duration(days:1)).year.toString()+'-'+DateTime.now().subtract(Duration(days:1)).month.toString()+'-'+DateTime.now().subtract(Duration(days:1)).day.toString()
+                                  :value=="Last Week"?EnddateController.text=DateTime.now().year.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().day.toString():""
+                              ;
+                              log(StartdateController.text);
+                              log(EnddateController.text);
+                            });
+                          },
+                          items: listDate.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ],
                     ),
                   ),
                   Padding(
@@ -177,6 +183,7 @@ class _LotOutputMasterPageState extends State<LotOutputMasterPage> {
                       child: RoundedSmallButtons(
 
                         icon: Icons.delete,
+
                         color: Colors.white,
                         onTap: (){
                           setState(() {
@@ -273,73 +280,104 @@ class _LotOutputMasterPageState extends State<LotOutputMasterPage> {
                   children: [
                     Row(
                       children: [
+                        Icon(Icons.battery_charging_full_outlined),
+                        Text("${data[index].purchaseNo}"),
+                        SizedBox(width: 60,),
+                        Text("Rs.${data[index].grandTotal}")
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.brown.shade800,
+                          child:  Text('${data[index].createdByUserName!.substring(0,1).toUpperCase() }'),
+                        ),
+                        SizedBox(width: 10,),
                         Container(
+                          width: 200,
                           child: Text(
-                            "Customer Name:",
+                            "${data[index].createdByUserName}",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                              child: Text(
-                                "${data[index].createdByUserName}",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
-                        ),
+                        // SizedBox(
+                        //   width: 10,
+                        // ),
+
                       ],
                     ),
                     kHeightSmall,
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            "Order No:",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                              child: Text(
-                                "${data[index].lotNo}",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Container(
+                    //       child: Text(
+                    //         "Customer Name:",
+                    //         style: TextStyle(fontWeight: FontWeight.bold),
+                    //       ),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 10,
+                    //     ),
+                    //     Container(
+                    //       height: 30,
+                    //       width: 200,
+                    //       decoration: BoxDecoration(
+                    //         color: const Color(0xffeff3ff),
+                    //         borderRadius: BorderRadius.circular(10),
+                    //         boxShadow: const [
+                    //           BoxShadow(
+                    //             color: Color(0xffeff3ff),
+                    //             offset: Offset(-2, -2),
+                    //             spreadRadius: 1,
+                    //             blurRadius: 10,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       child: Center(
+                    //           child: Text(
+                    //             "${data[index].createdByUserName}",
+                    //             style: TextStyle(fontWeight: FontWeight.bold),
+                    //           )),
+                    //     ),
+                    //   ],
+                    // ),
+                    // kHeightSmall,
+                    // Row(
+                    //   children: [
+                    //     Container(
+                    //       child: Text(
+                    //         "Order No:",
+                    //         style: TextStyle(fontWeight: FontWeight.bold),
+                    //       ),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 20,
+                    //     ),
+                    //     Container(
+                    //       height: 30,
+                    //       width: 200,
+                    //       decoration: BoxDecoration(
+                    //         color: const Color(0xffeff3ff),
+                    //         borderRadius: BorderRadius.circular(10),
+                    //         boxShadow: const [
+                    //           BoxShadow(
+                    //             color: Color(0xffeff3ff),
+                    //             offset: Offset(-2, -2),
+                    //             spreadRadius: 1,
+                    //             blurRadius: 10,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       child: Center(
+                    //           child: Text(
+                    //             "${data[index].lotNo}",
+                    //             style: TextStyle(fontWeight: FontWeight.bold),
+                    //           )),
+                    //     ),
+                    //   ],
+                    // ),
 
                     // kHeightMedium,
                     // Row(

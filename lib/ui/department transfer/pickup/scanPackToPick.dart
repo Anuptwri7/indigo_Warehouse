@@ -140,7 +140,7 @@ class _DepartmentPickScanPacksState extends State<DepartmentPickScanPacks> {
                               if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
-                                return Text("dj");
+                                return Text("");
                               }
                           }
                         }),

@@ -48,8 +48,12 @@ class _SerialInfoPageState extends State<SerialInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Serial Info"),
-        backgroundColor: Color(0xff2c51a4),
+        title: const Text("Serial Info",
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        // backgroundColor: Color(0xff2c51a4),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: ListView(
         children: [
@@ -60,15 +64,28 @@ class _SerialInfoPageState extends State<SerialInfoPage> {
               style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
-          Card(
-            color: Color(0xffeff3ff),
-            elevation: 8.0,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Text(
-                "${_packCodesListPackInfo.isEmpty ? "Please scan Serial code" : _packCodesListPackInfo}"),
+          Container(
+            margin: EdgeInsets.all(4.0),
+            padding: EdgeInsets.all(4.0),
+            decoration: kFormBoxDecoration,
+            width: MediaQuery.of(context).size.width,
+            child:  Text(
+                "${_packCodesListPackInfo.isEmpty ? "Please scan Serial code" : _packCodesListPackInfo[0]}"),
           ),
+
+          kHeightMedium,
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: _packCodesListPackInfo.isEmpty?Colors.grey:Color(0xff424143)
+              ),
+              onPressed: (){
+                setState(() {
+                  _packCodesListPackInfo.clear();
+                });
+              },
+              child: Text("New Serial Info",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),)
+          ),
+
           kHeightMedium,
           kHeightMedium,
 

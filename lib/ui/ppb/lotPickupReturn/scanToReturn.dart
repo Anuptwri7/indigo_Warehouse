@@ -414,7 +414,7 @@ class _ScanToPickupReturnState extends State<ScanToPickupReturn> {
 
     // pd.close();
 log(response.body);
-log("${ "id:${widget.mainId}"+"lot_details:${lotDetails}"}");
+log("${ "id:$lotDetails"+"lot_details:${lotDetails}"}");
 
     if (response.statusCode == 401||response.statusCode == 400) {
       displayToastSuccess(msg: jsonDecode(response.body)['msg'].toString().toUpperCase());

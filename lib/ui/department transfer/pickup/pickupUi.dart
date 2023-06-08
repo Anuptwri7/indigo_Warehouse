@@ -100,8 +100,10 @@ class _DepartmentTransferPickOrderState extends State<DepartmentTransferPickOrde
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Branch Transfer Pickup List",style: TextStyle(fontSize: 14),),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Branch Transfer Pickup List", style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -184,109 +186,150 @@ class _DepartmentTransferPickOrderState extends State<DepartmentTransferPickOrde
                 children: [
                   Row(
                     children: [
-                      Container(
-                        child: Text(
-                          "Transfer No:",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        height: 30,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                            child: Text(
-                              "${data[index].transferNo}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
-                      ),
+                      Icon(Icons.battery_charging_full_outlined),
+                      Text("${data[index].transferNo}"),
+                      SizedBox(width: 60,),
+                      Text("Rs.${data[index].grandTotal}")
                     ],
                   ),
-                  kHeightSmall,
+                  SizedBox(height: 10,),
                   Row(
                     children: [
-                      Container(
-                        child: Text(
-                          "From:",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.brown.shade800,
+                        child:  Text('${data[index].createdByUserName!.substring(0,1).toUpperCase() }'),
                       ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        height: 30,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffeff3ff),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffeff3ff),
-                              offset: Offset(-2, -2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
+                      SizedBox(width: 10,),
+                      Column(
+                        children: [
+                          Container(
+                            width: 200,
+                            child: Text(
+                              "${data[index].createdByUserName!.toUpperCase()}",
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                          ],
-                        ),
-                        child: Center(
+                          ),
+                          Container(
+                            width: 200,
                             child: Text(
                               "${data[index].fromDepartment!.name}",
                               style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
+                            ),
+                          ),
+                        ],
                       ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+
                     ],
                   ),
-                  kHeightMedium,
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       child: Text(
+                  //         "Transfer No:",
+                  //         style: TextStyle(fontWeight: FontWeight.bold),
+                  //       ),
+                  //     ),
+                  //     SizedBox(
+                  //       width: 10,
+                  //     ),
+                  //     Container(
+                  //       height: 30,
+                  //       width: 200,
+                  //       decoration: BoxDecoration(
+                  //         color: const Color(0xffeff3ff),
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         boxShadow: const [
+                  //           BoxShadow(
+                  //             color: Color(0xffeff3ff),
+                  //             offset: Offset(-2, -2),
+                  //             spreadRadius: 1,
+                  //             blurRadius: 10,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       child: Center(
+                  //           child: Text(
+                  //             "${data[index].transferNo}",
+                  //             style: TextStyle(fontWeight: FontWeight.bold),
+                  //           )),
+                  //     ),
+                  //   ],
+                  // ),
+                  // kHeightSmall,
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       child: Text(
+                  //         "From:",
+                  //         style: TextStyle(fontWeight: FontWeight.bold),
+                  //       ),
+                  //     ),
+                  //     SizedBox(
+                  //       width: 20,
+                  //     ),
+                  //     Container(
+                  //       height: 30,
+                  //       width: 200,
+                  //       decoration: BoxDecoration(
+                  //         color: const Color(0xffeff3ff),
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         boxShadow: const [
+                  //           BoxShadow(
+                  //             color: Color(0xffeff3ff),
+                  //             offset: Offset(-2, -2),
+                  //             spreadRadius: 1,
+                  //             blurRadius: 10,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       child: Center(
+                  //           child: Text(
+                  //             "${data[index].fromDepartment!.name}",
+                  //             style: TextStyle(fontWeight: FontWeight.bold),
+                  //           )),
+                  //     ),
+                  //   ],
+                  // ),
+                  // kHeightMedium,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ///verify button
-                      // Container(
-                      //   child: ElevatedButton(
-                      //     onPressed: () {
-                      //       // data[index].pickVerified ||
-                      //       //     !data[index].isPicked ||
-                      //       //     data[index].status == 3
-                      //       //     ? displayToast(msg: "Already Verified")
-                      //       //     : goToPage(context,
-                      //       //     PickUpVerified(id: data[index].id));
-                      //     },
-                      //     child: Icon(Icons.check),
-                      //     style: ButtonStyle(
-                      //       shadowColor: MaterialStateProperty.all<Color>(
-                      //           Colors.grey),
-                      //       backgroundColor:
-                      //       MaterialStateProperty.all<Color>(
-                      //
-                      //           data[index].isPicked==true
-                      //           ? Color.fromARGB(255, 68, 110, 201)
-                      //           .withOpacity(0.3)
-                      //           : Color.fromARGB(255, 68, 110, 201)),
-                      //       shape: MaterialStateProperty.all<
-                      //           RoundedRectangleBorder>(
-                      //         RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.circular(15),
-                      //           side: BorderSide(color: Colors.grey),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
+                      Container(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // data[index].v ||
+                            //     !data[index].isPicked ||
+                            //     data[index].status == 3
+                            //     ? displayToast(msg: "Already Verified")
+                            //     : goToPage(context,
+                            //     PickUpVerified(id: data[index].id));
+                          },
+                          child: Icon(Icons.check),
+                          style: ButtonStyle(
+                            shadowColor: MaterialStateProperty.all<Color>(
+                                Colors.grey),
+                            backgroundColor:
+                            MaterialStateProperty.all<Color>(
+
+                                data[index].isPicked==true
+                                ? Color.fromARGB(255, 68, 110, 201)
+                                .withOpacity(0.3)
+                                : Color.fromARGB(255, 68, 110, 201)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                side: BorderSide(color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         width: 20,
                       ),

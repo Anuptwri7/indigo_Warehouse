@@ -99,10 +99,11 @@ class RoundedButtonThree extends StatelessWidget {
     );
   }
 }
+
 class RoundedSmallButtons extends StatelessWidget {
-   Color? color;
-   IconData? icon;
-   VoidCallback? onTap;
+  Color? color;
+  IconData? icon;
+  VoidCallback? onTap;
 
   RoundedSmallButtons(
       { this.color,  this.icon,  this.onTap});
@@ -124,8 +125,40 @@ class RoundedSmallButtons extends StatelessWidget {
           height: 10.0,
           child: Icon(
             icon,
-            color: Colors.indigo,
+            color: Colors.brown,
+          ),
+        ),
+      ),
+    );
+  }
+}
 
+class RoundedSmallButtonsFive extends StatelessWidget {
+  Color? color;
+  IconData? icon;
+  VoidCallback? onTap;
+
+  RoundedSmallButtonsFive(
+      { this.color,  this.icon,  this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical:4.0),
+      child: Material(
+        elevation: 4.0,
+        color: color,
+        borderRadius: BorderRadius.circular(30.0),
+        child: MaterialButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          onPressed: onTap,
+          minWidth: 10.0,
+          height: 10.0,
+          child: Icon(
+            icon,
+            color: Colors.brown,
           ),
         ),
       ),

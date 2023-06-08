@@ -46,7 +46,7 @@ void displayToastSuccess({String? msg}) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      backgroundColor: Color(0xff2c51a4),
+      backgroundColor: Color(0xff424143),
       fontSize: 16.0);
 }
 

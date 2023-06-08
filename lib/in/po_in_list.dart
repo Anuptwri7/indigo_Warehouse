@@ -8,6 +8,7 @@ import 'package:indigo_paints/in/po_in_details.dart';
 import '../../data/network/network_methods.dart';
 
 
+
 class PendingOrderInList extends StatefulWidget {
   @override
   _PendingOrderInListState createState() => _PendingOrderInListState();
@@ -26,8 +27,11 @@ class _PendingOrderInListState extends State<PendingOrderInList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(StringConst.pendingOrders),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text(StringConst.pendingOrders,  style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+
+        elevation: 0,
       ),
       body: ListView(
         shrinkWrap: true,
@@ -77,24 +81,34 @@ class _PendingOrderInListState extends State<PendingOrderInList> {
               padding: kMarginPaddSmall,
               child: Column(
                 children: [
-                  poInRowDesign('Order No :', data[index].orderNo),
+                  Row(
+                    children: [
+                      Icon(Icons.battery_charging_full_outlined),
+                      Text("${data[index].orderNo}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.brown.shade800,
+                        child:  Text('${data[index].supplierName.substring(0,1).toUpperCase() }'),
+                      ),
+                      SizedBox(width: 10,),
+                      Container(
+                        width: 200,
+                        child: Text(
+                          "${data[index].supplierName }",
+                          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
+                        ),
+                      ),
+
+                    ],
+                  ),
                   kHeightSmall,
-                  poInRowDesign(
-                      'Date :',
-                      data[index]
-                          .createdDateAd
-                          .toLocal()
-                          .toString()
-                          .substring(0, 10)),
-                  kHeightSmall,
-                  poInRowDesign('Supplier Name :',
-                      data[index].supplierName),
-                  kHeightSmall,
-                  // poInRowDesign(
-                  //     'Remarks :',
-                  //     data[index].remarks.isNotEmpty
-                  //         ? data[index].remarks
-                  //         : "-"),
+
                   kHeightSmall,
                   RoundedButtons(
                     buttonText: 'View Details',
@@ -104,7 +118,7 @@ class _PendingOrderInListState extends State<PendingOrderInList> {
                           PurchaseOrdersDetails(data[index].purchaseOrderDetails,
                               data[index].id));
                     },
-                    color:  Color(0xff2c51a4),
+                    color: Colors.brown.shade800,
                   )
                 ],
               ),

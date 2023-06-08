@@ -48,53 +48,44 @@ class _DropRepacketState extends State<DropRepacket> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Drop Repacketting"),
-        backgroundColor: Color(0xff2c51a4),
+        title: const Text("Drop Re-Packet",
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        // backgroundColor: Color(0xff2c51a4),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Re -Packet Code',
-              style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
-            ),
+          Container(
+            margin: EdgeInsets.all(4.0),
+            padding: EdgeInsets.all(4.0),
+            decoration: kFormBoxDecoration,
+            width: MediaQuery.of(context).size.width,
+            child:  Text(
+                "${_packCodesList.isEmpty?"Please scan Pack code":_packCodesList}"),
           ),
-          Card(
-            color: Color(0xffeff3ff),
-            elevation: 8.0,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Text("${_packCodesList.isEmpty?"Please scan Pack code":_packCodesList}"),
-          ),
-          kHeightMedium,
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-            Text(
-              'Location',
-              style:
-              kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
-            ),
 
+          kHeightMedium,
+          Container(
+            margin: EdgeInsets.all(4.0),
+            padding: EdgeInsets.all(4.0),
+            decoration: kFormBoxDecoration,
+            width: MediaQuery.of(context).size.width,
+            child:  Text(
+                "${locationNumber.isEmpty?"Please scan the location":locationNumber[0]}"),
           ),
-          Card(
-            color: Color(0xffeff3ff),
-            elevation: 8.0,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            child: Text("${locationNumber.isEmpty?"Please scan the location":locationNumber}"),
-          ),
+
           kHeightMedium,
 
           ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: locationNumber.isEmpty||_packCodesList.isEmpty?Colors.grey:Color(0xff424143)
+              ),
               onPressed: (){
                 DropRepacketService();
               },
-              child: Text("Update"))
-
+              child: Text("Drop"))
 
         ],
       ),
@@ -292,7 +283,7 @@ class _DropRepacketState extends State<DropRepacket> {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: " successfully!");
     }else{
-      Fluttertoast.showToast(msg: response.body.toString());
+      Fluttertoast.showToast(msg: jsonDecode(response.body.toString())['message']);
     }
     if (kDebugMode) {
       log('hello${response.statusCode}');

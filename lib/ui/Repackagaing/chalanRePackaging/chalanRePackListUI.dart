@@ -100,8 +100,14 @@ class _ChalanRePackListUiState extends State<ChalanRePackListUi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chalan Master"),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Chalan Master",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -263,18 +269,7 @@ class _ChalanRePackListUiState extends State<ChalanRePackListUi> {
                         Container(
                           height: 30,
                           width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
+
                           child: Center(
                               child: Text(
                                 "${data[index].chalanNo}",
@@ -284,104 +279,7 @@ class _ChalanRePackListUiState extends State<ChalanRePackListUi> {
                       ],
                     ),
 
-                    // kHeightMedium,
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.end,
-                    //   children: [
-                    //     Container(
-                    //       child: ElevatedButton(
-                    //         onPressed: () {
-                    //           // savePackCodeList(packCodesList);
-                    //           // data[index].saleRePackingTypeCodes.isNotEmpty
-                    //           //     ? displayToast(msg: "Already Repackaged")
-                    //           //     :
-                    //           goToPage(context,
-                    //               ChalanRepackgingListUi(id: data[index].id.toString()));
-                    //         },
-                    //         child: Icon(Icons.check),
-                    //         style: ButtonStyle(
-                    //           shadowColor: MaterialStateProperty.all<Color>(
-                    //               Colors.grey),
-                    //           backgroundColor:
-                    //           MaterialStateProperty.all<Color>(Color.fromARGB(255, 68, 110, 201)),
-                    //           shape: MaterialStateProperty.all<
-                    //               RoundedRectangleBorder>(
-                    //             RoundedRectangleBorder(
-                    //               borderRadius: BorderRadius.circular(15),
-                    //               side: BorderSide(color: Colors.grey),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //
-                    //       ),
-                    //     ),
-                    //     SizedBox(
-                    //       width: 20,
-                    //     ),
-                    //     // Container(
-                    //     //   width: 100,
-                    //     //   child: data[index].isPicked == false
-                    //     //       ? ElevatedButton(
-                    //     //     onPressed: () => data[index].byBatch ==
-                    //     //         false
-                    //     //         ? goToPage(context,
-                    //     //         PickUpOrderDetails(data[index].id))
-                    //     //         : goToPage(
-                    //     //         context,
-                    //     //         PickUpOrderByBatchDetails(
-                    //     //             data[index].id)),
-                    //     //     child: Text(
-                    //     //       "PickUp",
-                    //     //       style: TextStyle(
-                    //     //           fontSize: 12,
-                    //     //           fontWeight: FontWeight.bold),
-                    //     //     ),
-                    //     //     style: ButtonStyle(
-                    //     //         shadowColor:
-                    //     //         MaterialStateProperty.all<Color>(
-                    //     //             Colors.grey),
-                    //     //         backgroundColor:
-                    //     //         MaterialStateProperty.all<Color>(
-                    //     //             Color(0xff3667d4)),
-                    //     //         shape: MaterialStateProperty.all<
-                    //     //             RoundedRectangleBorder>(
-                    //     //             RoundedRectangleBorder(
-                    //     //                 borderRadius:
-                    //     //                 BorderRadius.circular(15),
-                    //     //                 side: BorderSide(
-                    //     //                     color: Colors.grey)))),
-                    //     //   )
-                    //     //       : ElevatedButton(
-                    //     //     onPressed: () {
-                    //     //       displayToast(msg: "Already Picked");
-                    //     //     },
-                    //     //     child: Text(
-                    //     //       "Picked",
-                    //     //       style: TextStyle(
-                    //     //           fontSize: 12,
-                    //     //           fontWeight: FontWeight.bold),
-                    //     //     ),
-                    //     //     style: ButtonStyle(
-                    //     //       shadowColor:
-                    //     //       MaterialStateProperty.all<Color>(
-                    //     //           Colors.grey),
-                    //     //       backgroundColor:
-                    //     //       MaterialStateProperty.all<Color>(
-                    //     //           Color.fromARGB(255, 68, 110, 201)
-                    //     //               .withOpacity(0.3)),
-                    //     //       shape: MaterialStateProperty.all<
-                    //     //           RoundedRectangleBorder>(
-                    //     //         RoundedRectangleBorder(
-                    //     //           borderRadius:
-                    //     //           BorderRadius.circular(15),
-                    //     //           side: BorderSide(color: Colors.grey),
-                    //     //         ),
-                    //     //       ),
-                    //     //     ),
-                    //     //   ),
-                    //     // )
-                    //   ],
-                    // ),
+
                   ],
                 ),
               ),

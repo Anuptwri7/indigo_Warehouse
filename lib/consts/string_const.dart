@@ -1,35 +1,38 @@
   class StringConst {
     /*HomePage*/
+      // static String name = " SOORI";
+      static String name = " CUBIX";
+      static String account = " Account";
     static const String poIn = "Receive";
-    static const String poOut = "PICK UP";
-    static const String locationShifting = "LOCATION SHIFT";
+    static const String poOut = "Pick up";
+    static const String locationShifting = "Location Shifting";
     static const String dropDepartment = "Drop";
     static const String department = "Department";
     static const String pickDepartment = "Pick";
     static const String receiveDepartment = "Receive";
-    static const String sale = "SALE";
-    static const String info = "INFO";
-    static const String chalan = "CHALAN";
+    static const String sale = "Sale";
+    static const String info = "Info";
+    static const String chalan = "Chalan";
     static const String chalanreturn = "Chalan Return";
     static const String chalanReturndrop = "Chalan Return Drop";
     static const String salereturn = "Sale Return";
     static const String salereturndrop = "Sale Return Drop";
     static const String saleRePackaging = "Sale RePack";
     static const String dropRepacket = "Drop";
-    static const String RePacketing = "RePacketting";
+    static const String RePacketing = "Packetting";
     static const String chalanRePackaging = "Chalan RePack";
     static const String transferReapckaging = "Transfer RePack";
     static const String bulkDrop = "Bulk Drop";
     static const String singleDrop = "Single Drop";
     static const String getPackInfo = "Pack Info";
     static const String serialInfo = "Serial Info";
-    static const String poDrop = "DROP";
-    static const String poAudit = "AUDIT";
-    static const String openingStock = "OPEN STOCK";
-    static const String transfer = "TRANSFER ORDER";
-    static const String repackage = "RE-PACKAGING";
-    static const String ppb = "Pre-Proc Management";
-    static const String appName = "Indigo Paintss";
+    static const String poDrop = "Drop";
+    static const String poAudit = "Audit";
+    static const String openingStock = "Open Stock";
+    static const String transfer = "Transfer order";
+    static const String repackage = "Packaging";
+    static const String ppb = "Pre-Process";
+    static const String appName = "Indigo Paints";
 
     /*Login Page*/
     static String loginWelcome = "Welcome !";
@@ -41,8 +44,8 @@
 
     /*Network */
     static String mainUrl = '';
-    // static String branchUrl = 'https://api-demo.sooritechnology.com.np/api/v1/branches';
-    static String branchUrl = 'https://api-demo.ybs.com.np/api/v1/branches?limit=0';
+    static String branchUrl = 'https://api-demo.sooritechnology.com.np/api/v1/branches';
+    // static String branchUrl = 'https://api-demo.ybs.com.np/api/v1/branches?limit=0';
     // static String protocol = 'http://';
     static String protocol = 'https://';
     // static String branchUrl = 'http://192.168.101.8:8082/api/v1/branches';
@@ -137,6 +140,7 @@
     static String taskPickupScan= '/api/v1/ppb-app/packing-type-code-list?limit=10&purchase_detail=';
     static String pickupTask= '/api/v1/ppb-app/pickup-task-lot';
     static String lotPickupReturn= '/api/v1/ppb-app/pickup-return-task-lot';
+      static String packTypeDropDown = '/api/v1/purchase-app/pending-purchase-order-summary/';
 
     ///transfer Repackage
     static String transferMasterList= '/api/v1/department-transfer-app/department-transfer-no-list';
@@ -146,6 +150,18 @@
     static String postRepackAll= '/api/v1/department-transfer-app/repackage-department-transfer';
     static String addRepackage= '/api/v1/department-transfer-app/add-repackage-department-transfer';
     static String removeRepackaging= '/api/v1/department-transfer-app/remove-repackage-department-transfer';
+
+
+    /// split rp
+        static String splitNonSerializable= '/api/v1/item-serialization-app/split-re-packet-pack-code-non-serializable';
+           static String splitSerializable= '/api/v1/item-serialization-app/split-re-packet-pack-code-serializable';
+
+
+
+           static String item= '/api/v1/item-app/item-list?limit=0';
+           static String getPackingType= '/api/v1/item-app/packing-type-list?limit=0';
+           static String createPackingType= '/api/v1/item-app/packing-type-detail';
+           static String createPackingTypeUnit= '/api/v1/item-app/packing-type';
 
 
     ///department-transfer
@@ -204,7 +220,7 @@
   /*Drop Items*/
     static String dropOrders = 'Drop Received Orders';
     static String bulkdropOrders = 'Bulk Drop Received Orders';
-    static String dropDepartmentTransfer = 'Drop Branch Transfer';
+    static String dropDepartmentTransfer = 'Drop Department Transfer';
     static String dropDepartmentTransferDetails = 'Drop Details';
     static String dropOrdersDetail = 'Drop Order Details';
     static String bulkdropOrdersDetail = 'Bulk Drop Order Details';

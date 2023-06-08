@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const kTextStyleWhite = TextStyle(fontSize: 19.0, color: Colors.white);
 const kTextStyleBlack = TextStyle(fontSize: 16.0, color: Colors.black);
+const kTextStyleBlackForHomePage = TextStyle(fontSize: 16.0, color: Colors.black,fontWeight: FontWeight.bold);
 const kTextStyleSmall = TextStyle(fontSize: 16.0, color: Colors.white);
 const kTextBlackSmall = TextStyle(fontSize: 16.0, color: Colors.black);
 const kTextBlackSmallToDelete = TextStyle(fontSize: 16.0, color: Colors.red);
@@ -19,6 +20,9 @@ var assetContainerDecoration = BoxDecoration(
         offset: Offset(4, 4),
       )
     ]);
+const kHeightVeryBigForForm = SizedBox(
+  height: 8,
+);
 const kHeightVeryBig = SizedBox(
   height: 15,
 );

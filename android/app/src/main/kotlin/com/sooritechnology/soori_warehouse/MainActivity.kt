@@ -1,4 +1,4 @@
-package com.sooritechnology.indigo_paints
+package com.sooritechnology.demo
 
 import androidx.annotation.NonNull
 

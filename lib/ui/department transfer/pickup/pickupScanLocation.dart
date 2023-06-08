@@ -91,7 +91,6 @@ class _DepartmentPickupScanLocationState
     _newScannedLocationInitDataWedgeListener();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final pvr = Provider.of<SerialController>(context);
@@ -307,17 +306,7 @@ class _DepartmentPickupScanLocationState
                 )
                 ? displayToast(msg: "Already scanned")
                 :
-            //  replacePage(
-            //     TestPickupByBatch(
-            //       widget.purchaseDetail,
-            //       widget.qty,
-            //       data[index].code,
-            //       data[index].locationCode,
-            //       data[index].id,
-            //       widget.orderId,
-            //       index,
-            //     ),
-            //     context),
+
             goToPage(
               context,
               DepartmentPickScanPacks(

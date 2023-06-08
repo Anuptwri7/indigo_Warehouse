@@ -84,8 +84,11 @@ class _TestPickupByBatchUnserializableState extends State<TestPickupByBatchUnser
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan Item Location'),
-        backgroundColor: Color(0xff2c51a4),
+        title: const Text('Scan Item',
+          style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: ListView(
         children: [
@@ -97,7 +100,7 @@ class _TestPickupByBatchUnserializableState extends State<TestPickupByBatchUnser
             ),
           ),
           Card(
-            color: Color(0xffeff3ff),
+            color: Colors.white,
             elevation: 8.0,
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
@@ -122,7 +125,7 @@ class _TestPickupByBatchUnserializableState extends State<TestPickupByBatchUnser
             ),
           ),
           Card(
-              color: Color(0xffeff3ff),
+              color: Colors.white,
               elevation: 8.0,
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
@@ -142,7 +145,10 @@ class _TestPickupByBatchUnserializableState extends State<TestPickupByBatchUnser
                               if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
-                                return Text("dj");
+                                return Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text("Un-serializable Item"),
+                                );
                               }
                           }
                         }),
@@ -203,7 +209,7 @@ class _TestPickupByBatchUnserializableState extends State<TestPickupByBatchUnser
                     : null;
                 Navigator.pop(context);
               },
-              color: Color(0xff2c51a4),
+              color: Colors.brown.shade800,
             ),
           ),
         ],
@@ -215,7 +221,7 @@ class _TestPickupByBatchUnserializableState extends State<TestPickupByBatchUnser
 
   _displayItemsSerialNo() {
     return Card(
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
       child: Padding(

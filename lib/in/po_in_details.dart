@@ -32,6 +32,9 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
   List<String> pItemQty = [];
   List<String> pItemRefDetailID = [];
   http.Response? response;
+  List codes=[];
+
+  List finalCodes=[];
   // ProgressDialog pd;
 
   @override
@@ -45,10 +48,11 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          StringConst.purchaseOrdersDetail,
-          style: kTextStyleSmall,
-        ),
-        backgroundColor:  Color(0xff2c51a4),
+          StringConst.purchaseOrdersDetail,  style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+
+        elevation: 0,
         actions: [
           InkWell(
             onTap: () => savePurchaseOrders(),
@@ -57,7 +61,7 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
                 padding: kMarginPaddMedium,
                 child: Text(
                   StringConst.saveButton,
-                  style: kTextStyleSmall,
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
@@ -72,6 +76,7 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
               itemCount: widget.purchaseOrderDetails.length,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
+                log('${widget.purchasedID.toString()+widget.purchaseOrderDetails.toString()}');
                 loadPurchaseDetails(widget.purchaseOrderDetails, index);
 
                 return Card(
@@ -95,22 +100,19 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
                         poInRowDesign(' Ordered Qty :',
                             widget.purchaseOrderDetails[index].qty),
                         kHeightSmall,
-                        poInRowDesign('Received Qty :', ''),
-                        kHeightSmall,
-                        poInRowDesign('Serial Numbers:', ''),
-                        kHeightSmall,
+
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RoundedButtons(
 
-                              color:  Color(0xff2c51a4),
+                              color:  Colors.brown.shade800,
                               buttonText: "Start Scan",
 
                               onTap: () {
                                 goToPage(
                                     context,
-                                    CodeScanner(widget.purchaseOrderDetails,
-                                        index));
+                                    CodeScanner(widget.purchasedID,widget.purchaseOrderDetails,
+                                        index,()=>savePurchaseOrders()));
                               }),
                         ),
                       ],
@@ -164,6 +166,7 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
           /*Submitting the POrder with Codes*/
           if(itemSplit.length>0)
           {
+            log("executing this");
             for (List newItem in itemSplit) {
               for (var finalItem in newItem) {
                 _currentSerialNo.add({'code': finalItem.toString()},);
@@ -177,29 +180,34 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
             }
           }
           /*Submitting without scanned Codes*/
-          else{
-            for(int i = 0; i< purchaseBoxes.length; i++){
-              print(int.parse(purchaseBoxes[i]));
-              for(int j = 0; j < int.parse(purchaseBoxes[i]); j++){
-                _allPackTypeCodes.add({
-                  'pack_no': j,
-                  'pack_type_detail_codes': []
-                });
+          else {
+            for (int i = 0; i < purchaseBoxes.length; i++) {
+              log(int.parse(purchaseBoxes[i]).toString());
+              for (int j = 0; j < int.parse(purchaseBoxes[i]); j++) {
+                // codes.add(int.parse(purchaseBoxes[i]));
+                _allPackTypeCodes
+                    .add({'pack_no': j, 'pack_type_detail_codes': []});
               }
+
             }
           }
+
         }
 
-        for (int i = 0; i < widget.purchaseOrderDetails.length; i++) {
-          _pd.add({
-            'ref_purchase_order_detail': widget.purchaseOrderDetails[i].id,
-            'item': widget.purchaseOrderDetails[i].item,
-            'qty': double.parse(purchaseQty[i]).toInt(),
-            'packing_type': double.parse(pPackingType[i]).toInt(),
-            'packing_type_detail': double.parse(pPackingTypeDetail[i])
-                .toInt(),
-            'po_pack_type_codes': _allPackTypeCodes
-          });
+
+
+
+
+          for (int i = 0; i < widget.purchaseOrderDetails.length; i++) {
+            _pd.add({
+              'ref_purchase_order_detail': widget.purchaseOrderDetails[i].id,
+              'item': widget.purchaseOrderDetails[i].item,
+              'qty': double.parse(purchaseQty[i]).toInt(),
+              'packing_type': double.parse(pPackingType[i]).toInt(),
+              'packing_type_detail': double.parse(pPackingTypeDetail[i])
+                  .toInt(),
+              'po_pack_type_codes': _allPackTypeCodes
+            });
         }
 
         response = await NetworkHelper(
@@ -207,7 +215,7 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
             .userPurchaseOrder(refPurchaseOrder: widget.purchasedID, purchaseDetails: _pd);
 
         // pd.close();
-        log(widget.purchasedID.toString()+_pd.toString());
+        log('Sending data+${_pd}');
 
         var jsonData = jsonDecode(response!.body.toString());
         if (response!.statusCode >= 200 && response!.statusCode < 300) {

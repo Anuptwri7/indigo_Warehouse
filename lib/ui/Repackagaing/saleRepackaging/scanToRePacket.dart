@@ -77,8 +77,14 @@ class _ScanToRePacketUIState extends State<ScanToRePacketUI> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Rem Re-Package',style: TextStyle(fontSize: 16),),
-        backgroundColor: Color(0xff2c51a4),
+      appBar: AppBar(title: const Text('Rem Re-Package',
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 15,
+              fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           InkWell(
             onTap: (){
@@ -89,7 +95,10 @@ class _ScanToRePacketUIState extends State<ScanToRePacketUI> {
                 padding: kMarginPaddMedium,
                 child: Text(
                   StringConst.rePackageDelete,
-                  style: kTextStyleSmall,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold)
                 ),
               ),
             ),
@@ -112,18 +121,7 @@ class _ScanToRePacketUIState extends State<ScanToRePacketUI> {
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${widget.remPackCodes.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -138,18 +136,7 @@ class _ScanToRePacketUIState extends State<ScanToRePacketUI> {
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${_scanPackCode.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -160,40 +147,12 @@ class _ScanToRePacketUIState extends State<ScanToRePacketUI> {
             // kHeightMedium,
 
             ///show remaining pack codes
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //
-            //   child: Text('Pack Codes', style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),),
-            // ),
-            // printPackCodes(widget.remPackCodes),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
 
-
-
-            // FutureBuilder<List<SalePackingTypeCode>?>(
-            //     future: RepackagingListServices(),
-            //     builder: (context, snapshot) {
-            //       log("data"+snapshot.data.toString());
-            //       switch (snapshot.connectionState) {
-            //
-            //
-            //         case ConnectionState.waiting:
-            //           return const Center(
-            //               child: CircularProgressIndicator());
-            //         default:
-            //           if (snapshot.hasError) {
-            //             return Text('Error: ${snapshot.error}');
-            //           } else {
-            //             return  printPackCodes(snapshot.data);
-            //           }
-            //       }
-            //     }),
-            // Card(
-            //   color: Color(0xffeff3ff),
-            //   elevation: 8.0,
-            //   clipBehavior: Clip.antiAlias,
-            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-            //   child: printPackCodes(),
-            // ),
+              child: Text('Pack Codes', style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),),
+            ),
+            printPackCodes(widget.remPackCodes),
             kHeightMedium,
             Column(
               children: [
@@ -211,7 +170,7 @@ class _ScanToRePacketUIState extends State<ScanToRePacketUI> {
                 _scanPackCode.isNotEmpty
                     ? dropCurrentItem(_scanLocationNo, _scanPackNo)
                     : displayToast(msg:  'Please Scan Codes and Try Again'),
-                color: Color(0xff2c51a4),
+                color: Colors.brown.shade800,
               ),
             ),
           ],
@@ -222,19 +181,6 @@ class _ScanToRePacketUIState extends State<ScanToRePacketUI> {
 
 
 
-  // void savePackCodeList(List<SalePackingTypeCode> packingType) {
-  //   log(packCodesList[0].salePackingTypeCode.length.toString());
-  //   for (var i = 0; i < packingType[0].salePackingTypeCode.length; i++) {
-  //     _packCodesList.add(packCodesList[i].salePackingTypeCode[i].code.toString());
-  //     _packCodesID.add(packCodesList[i].salePackingTypeCode[i].id.toString());
-  //   }
-  //   serialvalueDict.isNotEmpty
-  //       ? {}
-  //       : serialvalueDict = Map.fromIterables(_packCodesID, _packCodesList);
-  //
-  //   totalSerialNo = serialvalueDict.length;
-  //   log(serialvalueDict.toString());
-  // }
 
   Future<List<SalePackingTypeCode>?> RepackagingListServices() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -251,7 +197,7 @@ class _ScanToRePacketUIState extends State<ScanToRePacketUI> {
     //         '$finalUrl${StringConst.urlCustomerOrderApp}order-master?ordering=-id&limit=0&offset=0&search=$search')
     //     .getOrdersWithToken();
     print("Response Code Drop: ${response.statusCode}");
-    log("${response.body}");
+    log("codes:${response.body}");
 
     if (response.statusCode == 401) {
       replacePage(LoginScreen(), context);
@@ -272,7 +218,7 @@ class _ScanToRePacketUIState extends State<ScanToRePacketUI> {
        setState(() {
          packCodesGot.add(packCodesList[i].code);
        });
-        log("fl"+packCodesGot.toString());
+        log("fl for sale"+packCodesGot.toString());
       }
 
         savePackCodeList(packCodesList);

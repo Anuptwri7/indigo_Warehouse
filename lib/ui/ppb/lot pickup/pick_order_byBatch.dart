@@ -15,7 +15,8 @@ import '../../../consts/style_const.dart';
 
 class PickUpOrderByBatchDetails extends StatefulWidget {
   final orderID;
-  PickUpOrderByBatchDetails(this.orderID);
+  bool ? isSerializable;
+  PickUpOrderByBatchDetails(this.orderID,this.isSerializable);
 
   @override
   State<PickUpOrderByBatchDetails> createState() =>
@@ -32,7 +33,6 @@ class _PickUpOrderByBatchDetailsState extends State<PickUpOrderByBatchDetails> {
   void initState() {
     pickUpDetails = pickUpOrdersDetails(widget.orderID);
     byBatchList.clear();
-    // pd = initProgressDialog(context);
     super.initState();
   }
 
@@ -73,9 +73,7 @@ class _PickUpOrderByBatchDetailsState extends State<PickUpOrderByBatchDetails> {
           'Accept': 'application/json',
           'Authorization': 'Bearer ${prefs.get("access_token")}'
         });
-    // response = await NetworkHelper(
-    //         '$finalUrl${StringConst.baseUrl+StringConst.urlCustomerOrderApp}order-detail?&limit=0&cancelled=false&order=$receivedOrderID')
-    //     .getOrdersWithToken();
+
 
     if (response.statusCode == 401) {
 
@@ -103,8 +101,11 @@ class _PickUpOrderByBatchDetailsState extends State<PickUpOrderByBatchDetails> {
                           PickUpOrderByBatchSaveLocation(
                               data[index].purchaseDetail,
                               data[index].id,
-                              data[index].qty))
-                      : Fluttertoast.showToast(msg: 'Item Alredy Dropped')
+                              data[index].qty,
+                            widget.isSerializable
+
+                          ))
+                      : Fluttertoast.showToast(msg: 'Item Already Dropped')
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -137,14 +138,7 @@ class _PickUpOrderByBatchDetailsState extends State<PickUpOrderByBatchDetails> {
                                 decoration: BoxDecoration(
                                   color: const Color(0xffeff3ff),
                                   borderRadius: BorderRadius.circular(10),
-                                  // boxShadow: const [
-                                  //   BoxShadow(
-                                  //     color: Color(0xffeff3ff),
-                                  //     offset: Offset(-2, -2),
-                                  //     spreadRadius: 1,
-                                  //     blurRadius: 10,
-                                  //   ),
-                                  // ],
+
                                 ),
                                 child: Center(
                                     child: Text(
@@ -173,14 +167,7 @@ class _PickUpOrderByBatchDetailsState extends State<PickUpOrderByBatchDetails> {
                                 decoration: BoxDecoration(
                                   color: const Color(0xffeff3ff),
                                   borderRadius: BorderRadius.circular(10),
-                                  // boxShadow: const [
-                                  //   BoxShadow(
-                                  //     color: Color(0xffeff3ff),
-                                  //     offset: Offset(-2, -2),
-                                  //     spreadRadius: 1,
-                                  //     blurRadius: 10,
-                                  //   ),
-                                  // ],
+
                                 ),
                                 child: Center(
                                     child: Text(
@@ -190,7 +177,6 @@ class _PickUpOrderByBatchDetailsState extends State<PickUpOrderByBatchDetails> {
                               ),
                             ],
                           ),
-
                           kHeightSmall,
                           Row(
                             children: [
@@ -209,14 +195,7 @@ class _PickUpOrderByBatchDetailsState extends State<PickUpOrderByBatchDetails> {
                                 decoration: BoxDecoration(
                                   color: const Color(0xffeff3ff),
                                   borderRadius: BorderRadius.circular(10),
-                                  // boxShadow: const [
-                                  //   BoxShadow(
-                                  //     color: Color(0xffeff3ff),
-                                  //     offset: Offset(-2, -2),
-                                  //     spreadRadius: 1,
-                                  //     blurRadius: 10,
-                                  //   ),
-                                  // ],
+
                                 ),
                                 child: Center(
                                     child: Text(
@@ -226,8 +205,6 @@ class _PickUpOrderByBatchDetailsState extends State<PickUpOrderByBatchDetails> {
                               ),
                             ],
                           ),
-                          // kHeightMedium,
-                          // pickedOrNotPicked(data, index),
                         ],
                       ),
                     ),
@@ -237,35 +214,4 @@ class _PickUpOrderByBatchDetailsState extends State<PickUpOrderByBatchDetails> {
             })
         : const Text('We have no Data for now');
   }
-
-  // void savePackCodeList(List<CustomerPackingType> customerPackingTypes) {
-  //   for (int i = 0; i < customerPackingTypes.length; i++) {
-  //     byBatchList.add(customerPackingTypes[i].locationCode ?? "" + "\n");
-  //   }
-  // }
-
-  // String showPickUpByBatch() {
-  //   return byBatchList.join(" , ").toString();
-  // }
-
-  // pickedOrNotPicked(data, index) {
-  //   return !isPicked
-  //       ? RoundedButtons(
-  //           buttonText: 'Pick',
-  //           onTap: () => {
-  //             goToPage(
-  //                 context,
-  //                 PickUpOrderByBatchSaveLocation(data[index].purchaseDetail,
-  //                     data[index].id, data[index].qty))
-  //           },
-  //           color: Color(0xff2c51a4),
-  //         )
-  //       : RoundedButtons(
-  //           buttonText: 'Picked',
-  //           onTap: () {
-  //             return displayToastSuccess(msg: 'Item Alredy Dropped');
-  //           },
-  //           color: Color(0xff6b88e8),
-  //         );
-  // }
 }

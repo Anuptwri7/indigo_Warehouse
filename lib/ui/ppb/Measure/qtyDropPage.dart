@@ -86,8 +86,11 @@ class _ScanToDropTheMeasurementState extends State<ScanToDropTheMeasurement> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: appBarColor,
-        title: Text("Link weight"),
+
+        title: Text("Link weight",  style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        elevation: 0,
       ),
 
       body: SingleChildScrollView(
@@ -99,14 +102,6 @@ class _ScanToDropTheMeasurementState extends State<ScanToDropTheMeasurement> {
                 .size
                 .width,
 
-            decoration:  BoxDecoration(
-              // boxShadow: [
-
-              // borderRadius: BorderRadius.all(
-              //   Radius.circular(10.0),
-              // ),
-              // color:Color(0xfff4f7ff),
-            ),
             child: Column(
               children: [
                 Container(
@@ -272,16 +267,9 @@ class _ScanToDropTheMeasurementState extends State<ScanToDropTheMeasurement> {
                       height: 30,
                       // width: 200,
                       decoration: BoxDecoration(
-                        color: const Color(0xffeff3ff),
+
                         borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
+
                       ),
                       child: Row(
                         children: [

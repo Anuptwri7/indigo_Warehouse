@@ -22,7 +22,7 @@ class PickOrder extends StatefulWidget {
   State<PickOrder> createState() => _PickOrderState();
 }
 
-class _PickOrderState extends State<PickOrder> {
+class _PickOrderState extends State<PickOrder> with TickerProviderStateMixin{
 
   int page =0;
   int limit = 10;
@@ -72,6 +72,8 @@ class _PickOrderState extends State<PickOrder> {
   // bool loading = false;
   // bool allLoaded = false;
   late ScrollController controller;
+  late TabController? _controller;
+  int _selectedIndex = 0;
   @override
   void initState() {
 
@@ -81,6 +83,13 @@ class _PickOrderState extends State<PickOrder> {
     pd = initProgressDialog(context);
 
     super.initState();
+    _controller = TabController(length: 3, vsync: this);
+    _controller!.addListener(() {
+      setState(() {
+        _selectedIndex = _controller!.index;
+      });
+      log("Selected Index: " + _controller!.index.toString());
+    });
     // scrollController.addListener(() {
     //   if (scrollController.position.pixels >=
     //           scrollController.position.maxScrollExtent &&
@@ -90,6 +99,7 @@ class _PickOrderState extends State<PickOrder> {
 
   @override
   void dispose() {
+    _controller!.dispose();
     // _searchController.dispose();
     super.dispose();
   }
@@ -97,9 +107,31 @@ class _PickOrderState extends State<PickOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Pickup List"),
-        backgroundColor: Color(0xff2c51a4),
+      appBar:AppBar(
+
+        title: Row(
+          children:  [
+            Text(
+              "Pickup list",
+              style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        bottom: TabBar(
+          controller: _controller,
+          indicatorColor:Color(0xffBF1E2E),
+          indicatorWeight: 2,
+          unselectedLabelColor: Colors.grey,
+          labelColor:Color(0xffBF1E2E),
+          tabs: [
+            Tab(text: "Pending",),
+            Tab(text: "Billed",),
+            Tab(text: "Cancelled",),
+          ],
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -171,189 +203,60 @@ class _PickOrderState extends State<PickOrder> {
             itemCount: data.length,
             // physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return Card(
-                margin: kMarginPaddSmall,
-                color: Colors.white,
-                elevation: kCardElevation,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0)),
-                child: Container(
-                  padding: kMarginPaddSmall,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "Customer Name:",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+              return GestureDetector(
+                onTap: (){
+                  data[index].byBatch ==
+                      false
+                      ? goToPage(context,
+                      PickUpOrderDetails(data[index].id))
+                      : goToPage(
+                      context,
+                      PickUpOrderByBatchDetails(data[index].orderNo,data[index].customerFirstName,data[index].customerLastName,
+                          data[index].id));
+                },
+                child: Card(
+                  margin: kMarginPaddSmall,
+                  color: Colors.white,
+                  elevation: kCardElevation,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0)),
+                  child: Container(
+                    padding: kMarginPaddSmall,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.battery_charging_full_outlined),
+                            Text("${data[index].orderNo}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+
+                          ],
+                        ),
+                        SizedBox(height: 10,),
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.brown.shade800,
+                              child:  Text('${data[index].customerFirstName.substring(0,1).toUpperCase() }'),
                             ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            height: 30,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffeff3ff),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xffeff3ff),
-                                  offset: Offset(-2, -2),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                                child: Text(
-                              "${data[index].customerFirstName + data[index].customerLastName}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
-                          ),
-                        ],
-                      ),
-                      kHeightSmall,
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "Order No:",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Container(
-                            height: 30,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffeff3ff),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xffeff3ff),
-                                  offset: Offset(-2, -2),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                                child: Text(
-                              "${data[index].orderNo}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
-                          ),
-                        ],
-                      ),
-                      kHeightMedium,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                data[index].pickVerified ||
-                                        !data[index].isPicked ||
-                                        data[index].status == 3
-                                    ? displayToast(msg: "Already Verified")
-                                    : goToPage(context,
-                                        PickUpVerified(id: data[index].id));
-                              },
-                              child: Icon(Icons.check),
-                              style: ButtonStyle(
-                                shadowColor: MaterialStateProperty.all<Color>(
-                                    Colors.grey),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(data[index]
-                                                .pickVerified ||
-                                            !data[index].isPicked ||
-                                            data[index].status == 3
-                                        ? Color.fromARGB(255, 68, 110, 201)
-                                            .withOpacity(0.3)
-                                        : Color.fromARGB(255, 68, 110, 201)),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    side: BorderSide(color: Colors.grey),
-                                  ),
-                                ),
+                            SizedBox(width: 10,),
+                            Container(
+                              width: 200,
+                              child: Text(
+                                "${data[index].customerFirstName + data[index].customerLastName}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Container(
-                            width: 100,
-                            child: data[index].isPicked == false
-                                ? ElevatedButton(
-                                    onPressed: () => data[index].byBatch ==
-                                            false
-                                        ? goToPage(context,
-                                            PickUpOrderDetails(data[index].id))
-                                        : goToPage(
-                                            context,
-                                            PickUpOrderByBatchDetails(
-                                                data[index].id)),
-                                    child: Text(
-                                      "PickUp",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    style: ButtonStyle(
-                                        shadowColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.grey),
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Color(0xff3667d4)),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                side: BorderSide(
-                                                    color: Colors.grey)))),
-                                  )
-                                : ElevatedButton(
-                                    onPressed: () {
-                                      displayToast(msg: "Already Picked");
-                                    },
-                                    child: Text(
-                                      "Picked",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    style: ButtonStyle(
-                                      shadowColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.grey),
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Color.fromARGB(255, 68, 110, 201)
-                                                  .withOpacity(0.3)),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          side: BorderSide(color: Colors.grey),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                          )
-                        ],
-                      ),
-                    ],
+                            // SizedBox(
+                            //   width: 10,
+                            // ),
+
+                          ],
+                        ),
+                        kHeightSmall,
+
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -371,7 +274,7 @@ class _PickOrderState extends State<PickOrder> {
     String finalUrl = prefs.getString("subDomain").toString();
 
     final response = await http.get(
-        Uri.parse('https://$finalUrl${StringConst.urlCustomerOrderApp}order-master?ordering=-id&limit=0&offset=0&search=$search'),
+        Uri.parse('https://$finalUrl${StringConst.urlCustomerOrderApp}order-master?ordering=-id&limit=0&offset=0&search=$search&status=${_controller!.index+1}&approved=true'),
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
@@ -381,7 +284,7 @@ class _PickOrderState extends State<PickOrder> {
     //         '$finalUrl${StringConst.urlCustomerOrderApp}order-master?ordering=-id&limit=0&offset=0&search=$search')
     //     .getOrdersWithToken();
     print("Response Code Drop: ${response.statusCode}");
-    log("${response.body}");
+    log("${_controller!.index+1}");
 
     if (response.statusCode == 401) {
       replacePage(LoginScreen(), context);

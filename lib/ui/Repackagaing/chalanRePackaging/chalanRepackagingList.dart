@@ -107,8 +107,14 @@ class _ChalanRepackgingListUiState extends State<ChalanRepackgingListUi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chalan Repack List",style: TextStyle(fontSize: 16),),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("Chalan Repack List",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           InkWell(
             onTap: (){
@@ -127,7 +133,10 @@ class _ChalanRepackgingListUiState extends State<ChalanRepackgingListUi> {
                 child: Text(
                   'Create',
                   // StringConst.rePackageAll,
-                  style: kTextStyleSmall,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -336,18 +345,7 @@ class _ChalanRepackgingListUiState extends State<ChalanRepackgingListUi> {
                         Container(
                           height: 30,
                           width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
+
                           child: Center(
                               child: Text(
                                 "${data[index].code}",

@@ -93,8 +93,11 @@ String purchase_detail ='';
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: appBarColor,
-        title: Text("Drop Details"),
+
+        title: Text("Drop Details", style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
 
       body: SingleChildScrollView(
@@ -125,18 +128,7 @@ String purchase_detail ='';
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${recPackCode.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
                     Container(
@@ -146,18 +138,7 @@ String purchase_detail ='';
                     Container(
                       height: 30,
                       width: 60,
-                      decoration:  BoxDecoration(
-                        color: const Color(0xffeff3ff),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xffeff3ff),
-                            offset: Offset(-2, -2),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
+
                       child: Center(child: Text("${scannedPackCodes.length}",style: TextStyle(fontWeight: FontWeight.bold),)),
                     ),
 
@@ -203,7 +184,7 @@ String purchase_detail ='';
                   child: SingleChildScrollView(
 
                     child: Card(
-                      color: Color(0xffeff3ff),
+                      color: Colors.white,
                       elevation: kCardElevation,
                       shape: kCardRoundedShape,
 
@@ -277,7 +258,7 @@ String purchase_detail ='';
                             UpdateLocation();
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Color(0xff789cc8),
+                            primary: Colors.brown.shade800,
                             minimumSize: const Size.fromHeight(30),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)
@@ -311,22 +292,25 @@ String purchase_detail ='';
       height: MediaQuery.of(context).size.height/4,
           child: Card(
 
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
-            child: ListView.builder(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ListView.builder(
 
-            shrinkWrap: true,
-            itemCount: data[0].puPackTypeCodes!.length,
+              shrinkWrap: true,
+              itemCount: data[0].puPackTypeCodes!.length,
 
-            // physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-                purchase_detail = data[0].id.toString();
-                recPackCode.contains(data[0].puPackTypeCodes![index].code.toString())?"":recPackCode.add(data[0].puPackTypeCodes![index].code.toString());
-              return smallShowMorePickUpLocations(
-                              "${data[0].puPackTypeCodes![index].code.toString()} ") ;
-                // Text("${data[0].puPackTypeCodes[index].code.toString()} ");
-            }),
+              // physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                  purchase_detail = data[0].id.toString();
+                  recPackCode.contains(data[0].puPackTypeCodes![index].code.toString())?"":recPackCode.add(data[0].puPackTypeCodes![index].code.toString());
+                return smallShowMorePickUpLocations(
+                                "${data[0].puPackTypeCodes![index].code.toString()} ") ;
+                  // Text("${data[0].puPackTypeCodes[index].code.toString()} ");
+              }),
+            ),
           ),
         )
         : Center(
@@ -339,7 +323,7 @@ String purchase_detail ='';
 
   _displayLocationScanned() {
     return Card(
-      color: Color(0xffeff3ff),
+      color: Colors.white,
       elevation: kCardElevation,
       shape: kCardRoundedShape,
       child: Padding(

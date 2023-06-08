@@ -19,7 +19,8 @@ class PickUpOrderByBatchSaveLocation extends StatefulWidget {
   int? orderId;
   int? purchaseDetail;
   double? qty;
-  PickUpOrderByBatchSaveLocation(this.purchaseDetail, this.orderId, this.qty);
+  bool ? isSerializable;
+  PickUpOrderByBatchSaveLocation(this.purchaseDetail, this.orderId, this.qty,this.isSerializable);
 
   @override
   State<PickUpOrderByBatchSaveLocation> createState() =>
@@ -90,21 +91,23 @@ class _PickUpOrderByBatchSaveLocationState
   @override
   void initState() {
     super.initState();
+    log(widget.qty.toString());
     _newScannedLocationInitDataWedgeListener();
   }
 
   @override
   Widget build(BuildContext context) {
     final pvr = Provider.of<SerialControllerForLot>(context);
+    log("scanned pk"+pvr.scannnedPK.toString());
     WidgetsBinding.instance.addPostFrameCallback((_) {
-     if(widget.qty!.toInt()==0){
-       widget.qty! < pvr.serialId.length? _completedButton(context) : null;
-       widget.qty == pvr.serialId.length? constLocation = _currentScannedLocation:"";
-     }else{
-       widget.qty == pvr.serialId.length? _completedButton(context) : null;
-       widget.qty == pvr.serialId.length? constLocation = _currentScannedLocation:"";
-     }
-      widget.qty == pvr.serialId.length? constLocation = _currentScannedLocation:"";
+      if(widget.isSerializable==true){
+        widget.qty == pvr.serialId.length ? _completedButton(context) : null;
+      }else{
+        pvr.scannnedPK.isNotEmpty?
+        _completedButton(context):null;
+      }
+
+
       // location.contains(_currentScannedLocation)
       //     ? ""
       //     : displayToast(msg: "Please scan location");
@@ -120,8 +123,13 @@ class _PickUpOrderByBatchSaveLocationState
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Save Lot Pickup Codes'),
-          backgroundColor: Color(0xff2c51a4),
+          title: Text('Save Lot Pickup Codes', style: TextStyle(
+              color: Colors.black,
+              fontSize: 15,
+              fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -133,7 +141,7 @@ class _PickUpOrderByBatchSaveLocationState
                 child: Card(
                   margin: kMarginPaddSmall,
                   // color: const Color(0xffeff3ff),
-                  color: Color.fromARGB(255, 204, 212, 241),
+                  color: Colors.brown.shade800,
 
                   elevation: kCardElevation,
                   shape: RoundedRectangleBorder(
@@ -155,14 +163,14 @@ class _PickUpOrderByBatchSaveLocationState
                                     child: Text(
                                       "Locations",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,color: Colors.white),
                                     ),
                                   ),
                                   Container(
                                     // height: 0,
                                     width: 220,
                                     decoration: BoxDecoration(
-                                      color: const Color(0xffeff3ff),
+                                      color:  Colors.white,
                                       borderRadius: BorderRadius.circular(10),
                                       // boxShadow: const [
                                       //   BoxShadow(
@@ -205,19 +213,19 @@ class _PickUpOrderByBatchSaveLocationState
                               children: [
                                 Text(
                                   "Remaining Qty",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                                 ),
                                 Container(
                                   width: MediaQuery.of(context).size.width/4,
                                   // height: 50,
                                   decoration: BoxDecoration(
-                                      color: const Color(0xffeff3ff),
+                                      color:  Colors.white,
                                       borderRadius: BorderRadius.circular(10)),
                                   child: Center(
                                       child: Padding(
                                     padding: const EdgeInsets.all(12.0),
                                     child: Text(
-                                      "${(widget.qty! - pvr.serialId.length)}",
+                                      "${(widget.isSerializable==true?widget.qty! - pvr.serialId.length:widget.qty!-pvr.scannnedPK.length!)}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 17),
@@ -260,7 +268,7 @@ class _PickUpOrderByBatchSaveLocationState
                         height: 100,
                         width: 250,
                         decoration: BoxDecoration(
-                            color: Colors.green[50],
+                            color: Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
                             child: _currentScannedLocation.isEmpty
@@ -329,7 +337,8 @@ class _PickUpOrderByBatchSaveLocationState
                           data[index].id,
                           widget.orderId,
                           index,
-                            data[index].remainingQty
+                            data[index].remainingQty,
+                          widget.isSerializable
                         ),
                       ),
                 child: Padding(
@@ -365,11 +374,7 @@ class _PickUpOrderByBatchSaveLocationState
                               Container(
                                 height: 30,
                                 width: 150,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 218, 225, 247),
-                                  // color: const Color(0xffeff3ff),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+
                                 child: Center(
                                     child: Text(
                                   "${data[index].code}",
@@ -391,10 +396,7 @@ class _PickUpOrderByBatchSaveLocationState
                               Container(
                                 height: 30,
                                 width: 200,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 218, 225, 247),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+
                                 child: Center(
                                     child: Text(
                                   "${data[index].remainingQty}",
@@ -499,7 +501,7 @@ class _PickUpOrderByBatchSaveLocationState
       "task_lot_detail_id": widget.orderId,
       "task_lot_packing_types": scannedPack
     };
-
+log("SENDING BODY:"+responseBody.toString());
     // log("Scanned Serial code final" + response.body);
     try {
       var response = await http.post(
@@ -560,7 +562,7 @@ class _PickUpOrderByBatchSaveLocationState
     // response = await NetworkHelper(
     //         '$finalUrl${StringConst.baseUrl+StringConst.urlCustomerOrderApp}pack-type?limit=0&purchase_detail=$receivedOrderID&location_code=$search')
     //     .getOrdersWithToken();
-log(response.body);
+log("RESPONSE FOR PACK CODES:"+response.body);
     if (response.statusCode == 401) {
 
     } else {
@@ -577,6 +579,6 @@ log(response.body);
   popAndLoadPage(pkOrderID) {
     Navigator.pop(context);
     Navigator.pop(context);
-    goToPage(context, PickUpOrderByBatchDetails(pkOrderID));
+    goToPage(context, PickUpOrderByBatchDetails(pkOrderID,widget.isSerializable));
   }
 }

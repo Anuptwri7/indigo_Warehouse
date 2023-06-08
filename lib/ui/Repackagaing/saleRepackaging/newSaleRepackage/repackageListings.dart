@@ -111,8 +111,15 @@ class _NewRepackgingListUiState extends State<NewRepackgingListUi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("New Repackaging List",style: TextStyle(fontSize: 16),),
-        backgroundColor: Color(0xff2c51a4),
+        title: Text("New Repackaging List",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+
         actions: [
           InkWell(
             onTap: (){
@@ -130,7 +137,10 @@ setState(() {
                 child: Text(
                   'Create',
                   // StringConst.rePackageAll,
-                  style: kTextStyleSmall,
+                  style:TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -215,18 +225,7 @@ setState(() {
                         Container(
                           height: 30,
                           width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffeff3ff),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xffeff3ff),
-                                offset: Offset(-2, -2),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
+
                           child: Center(
                               child: Text(
                                 "${data[index].code}",
@@ -402,14 +401,14 @@ setState(() {
     String finalUrl = prefs.getString("subDomain").toString();
 
     final response = await http.get(
-        Uri.parse('https://${finalUrl}${StringConst.rePackagingList}?id=${widget.id}&sale_master=${widget.id}'),
+        Uri.parse('https://${finalUrl}${StringConst.rePackagingList}?id=&sale_master=${widget.id}'),
         // Uri.parse('http://${finalUrl}:8081${StringConst.rePackagingList}?id=${widget.id}&sale_master=${widget.id}'),
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer ${prefs.get("access_token")}'
         });
-    log('http://${finalUrl}:8081${StringConst.rePackagingList}?id=&sale_master=${widget.id}');
+    log('http://${finalUrl}${StringConst.rePackagingList}?id=&sale_master=${widget.id}');
     // http.Response response = await NetworkHelper(
     //         '$finalUrl${StringConst.urlCustomerOrderApp}order-master?ordering=-id&limit=0&offset=0&search=$search')
     //     .getOrdersWithToken();

@@ -26,9 +26,10 @@ class TestPickupByBatch extends StatefulWidget {
   int? order;
   int? index;
   double? remQty;
+  bool? isSerialzable;
 
   TestPickupByBatch(this.batchNo, this.qty, this.pkCode, this.locationCode,
-      this.id, this.order, this.index,this.remQty);
+      this.id, this.order, this.index,this.remQty,this.isSerialzable);
 
   @override
   State<TestPickupByBatch> createState() => _TestPickupByBatchState();
@@ -76,8 +77,13 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan Items to Pick'),
-        backgroundColor: Color(0xff2c51a4),
+        title: const Text('Scan Items to Pick' ,style: TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+            fontWeight: FontWeight.bold)),
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
       ),
       body: ListView(
         children: [
@@ -114,7 +120,7 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
             ),
           ),
           Card(
-              color: Color(0xffeff3ff),
+              color: Colors.white,
               elevation: 8.0,
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
@@ -164,57 +170,40 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
             child: ElevatedButton(
               child:Text('Save') ,
               onPressed: () async {
+
                 final pvr =
                     Provider.of<SerialControllerForLot>(context, listen: false);
+
                 List<String> updatedSerialId = pvr.serialId;
                 updatedSerialId += _scanedSerialId;
                 pvr.updateSerialId(newSerialId: updatedSerialId);
-                if(widget.qty!<widget.remQty!){
-                  pvr.serialId.length=widget.qty!.toInt();
-                }else{}
+
                 List<String> updatedSerialcode = pvr.serialCode;
                 updatedSerialcode += _scanedSerialNo;
                 pvr.updateSerialCode(newSerialCode: updatedSerialcode);
 
                 List<dynamic> sale_packing_type_detail_code = [];
                 for (var i = 0; i < _scanedSerialId.length; i++) {
-                  sale_packing_type_detail_code.add({
+                widget.isSerialzable==true?  sale_packing_type_detail_code.add({
                     "id": _scanedSerialId[i],
                     "code": _scanedSerialNo[i],
                     "packing_type_detail_code": _scanedSerialId[i]
-                  });
+                  }):
+             sale_packing_type_detail_code==[];
                 }
-                log(widget.qty!.toInt().toString());
-                if(widget.qty!.toInt().toString()=="0"){
-                  _scanedSerialId.isNotEmpty
-                      ? pvr.updatePackId(
-                      Id: widget.id.toString(),
-                      sale_packing_type_detail_code:
-                      sale_packing_type_detail_code,
-                      qty: widget.remQty
-                  )
-                      : null;
-                  Navigator.pop(context);
-                }else{
-
-                  _scanedSerialId.isNotEmpty
-                      ? pvr.updatePackId(
-                      Id: widget.id.toString(),
-                      sale_packing_type_detail_code:
-                      sale_packing_type_detail_code,
-                      qty: widget.remQty
-                  )
-                      : null;
-                  _scanedSerialId.isNotEmpty
-                      ? pvr.updateIndex(pk: widget.pkCode)
-                      : null;
-                  Navigator.pop(context);
-                }
-
-
-
+                _scanedSerialId.isNotEmpty
+                    ? pvr.updatePackId(
+                  Id: widget.id.toString(),
+                  sale_packing_type_detail_code:
+                  sale_packing_type_detail_code,
+                  qty: widget.isSerialzable==false?widget.qty!.toDouble():_scanedSerialId.length.toDouble(),
+                )
+                    : null;
+                _scanedSerialId.isNotEmpty
+                    ? pvr.updateIndex(pk: widget.pkCode)
+                    : null;
+                Navigator.pop(context);
               },
-
             ),
           ),
         ],
@@ -227,7 +216,7 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
      return SingleChildScrollView(
        scrollDirection: Axis.vertical,
        child: Card(
-         color: Color(0xffeff3ff),
+         color: Colors.white,
          elevation: kCardElevation,
          shape: kCardRoundedShape,
 
@@ -237,9 +226,7 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
              sortColumnIndex: 0,
              columnSpacing: 190,
              horizontalMargin: 0,
-
              // columnSpacing: 10,
-
              columns: [
                DataColumn(
                  label: SizedBox(
@@ -247,18 +234,7 @@ class _TestPickupByBatchState extends State<TestPickupByBatch> {
                    child: const Text('Pack Code'),
                  ),
                ),
-               // DataColumn(
-               //   label: SizedBox(
-               //     // width: width * .25,
-               //     child: const Text('Action'),
-               //   ),
-               // ),
-               // DataColumn(
-               //   label: SizedBox(
-               //     width: width * .1,
-               //     child: const Text('Action'),
-               //   ),
-               // ),
+
              ],
              rows: List.generate(
                  _scanedSerialNo.length,
