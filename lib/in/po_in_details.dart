@@ -54,18 +54,18 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
 
         elevation: 0,
         actions: [
-          InkWell(
-            onTap: () => savePurchaseOrders(),
-            child: Center(
-              child: Container(
-                padding: kMarginPaddMedium,
-                child: Text(
-                  StringConst.saveButton,
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () => savePurchaseOrders(),
+          //   child: Center(
+          //     child: Container(
+          //       padding: kMarginPaddMedium,
+          //       child: Text(
+          //         StringConst.saveButton,
+          //         style: TextStyle(color: Colors.black),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       body: ListView(

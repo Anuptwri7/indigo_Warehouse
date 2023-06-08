@@ -131,10 +131,8 @@ class _CodeScannerState extends State<CodeScanner> {
                 _allPackTypeCodes
                     .add({'pack_no': j, 'pack_type_detail_codes': []});
               }
-
             }
           }
-
         }
 
         for (int i = 0; i < 1; i++) {
