@@ -78,7 +78,6 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
               itemBuilder: (context, index) {
                 log('${widget.purchasedID.toString()+widget.purchaseOrderDetails.toString()}');
                 loadPurchaseDetails(widget.purchaseOrderDetails, index);
-
                 return Card(
                   margin: kMarginPaddSmall,
                   color: Colors.white,
@@ -100,14 +99,11 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
                         poInRowDesign(' Ordered Qty :',
                             widget.purchaseOrderDetails[index].qty),
                         kHeightSmall,
-
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RoundedButtons(
-
                               color:  Colors.brown.shade800,
                               buttonText: "Start Scan",
-
                               onTap: () {
                                 goToPage(
                                     context,
@@ -127,7 +123,6 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
 
 
   Future savePurchaseOrders() async {
-    // pd.show(max: 100, msg: 'Updating Serial No...');
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -179,7 +174,7 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
               _currentSerialNo.clear();
             }
           }
-          /*Submitting without scanned Codes*/
+
           else {
             for (int i = 0; i < purchaseBoxes.length; i++) {
               log(int.parse(purchaseBoxes[i]).toString());
@@ -193,10 +188,6 @@ class _PurchaseOrdersDetailsState extends State<PurchaseOrdersDetails> {
           }
 
         }
-
-
-
-
 
           for (int i = 0; i < widget.purchaseOrderDetails.length; i++) {
             _pd.add({

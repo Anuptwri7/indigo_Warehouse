@@ -8,7 +8,6 @@ import 'package:indigo_paints/in/po_in_details.dart';
 import '../../data/network/network_methods.dart';
 
 
-
 class PendingOrderInList extends StatefulWidget {
   @override
   _PendingOrderInListState createState() => _PendingOrderInListState();
@@ -36,15 +35,6 @@ class _PendingOrderInListState extends State<PendingOrderInList> {
       body: ListView(
         shrinkWrap: true,
         children: [
-          // Center(
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(8.0),
-          //     child: Text(
-          //       'List of Pending Orders',
-          //       style: kTextStyleBlack.copyWith(fontWeight: FontWeight.bold),
-          //     ),
-          //   ),
-          // ),
           FutureBuilder<List<Result>?>(
               future: purchaseOrders,
               builder: (context, snapshot) {
